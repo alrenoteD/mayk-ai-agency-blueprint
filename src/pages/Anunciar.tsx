@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -249,7 +248,6 @@ const Anunciar: React.FC = () => {
                           </div>
                         </div>
                         
-                        {/* Entrada manual */}
                         <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                           <h4 className="text-sm font-medium mb-3">Inserir Valores Manualmente</h4>
                           <div className="grid grid-cols-2 gap-4">
@@ -823,12 +821,6 @@ const Anunciar: React.FC = () => {
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                         <span className="text-sm">Usa cores que contrastam com o feed do Facebook</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="h-5 w-5 text-amber-600 dark:text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-sm">Está segmentado para público específico</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <svg className="h-5 w-5 text-amber-600 dark:text-amber-400" viewBox="0 0 20 20" fill="currentColor">

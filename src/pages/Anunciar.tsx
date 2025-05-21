@@ -483,21 +483,27 @@ const Anunciar: React.FC = () => {
                     <CardContent>
                       <ul className="space-y-3">
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">1</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">1</span>
+                          </div>
                           <div>
                             <span className="font-medium">Análise de Concorrentes</span>
                             <p className="text-xs text-muted-foreground">Relatório comparativo de atendimento entre o cliente e 3 concorrentes</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">2</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">2</span>
+                          </div>
                           <div>
                             <span className="font-medium">Templates de Mensagens</span>
                             <p className="text-xs text-muted-foreground">Pacote de 30 templates de mensagens otimizadas para conversão</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">3</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">3</span>
+                          </div>
                           <div>
                             <span className="font-medium">Integração Adicional</span>
                             <p className="text-xs text-muted-foreground">Uma integração adicional com sistema já utilizado pelo cliente</p>
@@ -514,21 +520,27 @@ const Anunciar: React.FC = () => {
                     <CardContent>
                       <ul className="space-y-3">
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">1</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">1</span>
+                          </div>
                           <div>
                             <span className="font-medium">Limite de Vagas</span>
                             <p className="text-xs text-muted-foreground">Restrinja novas implementações a 3-5 por mês para qualidade</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">2</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">2</span>
+                          </div>
                           <div>
                             <span className="font-medium">Desconto por Decisão Rápida</span>
                             <p className="text-xs text-muted-foreground">10-20% de desconto para decisão em até 48h após apresentação</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">3</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">3</span>
+                          </div>
                           <div>
                             <span className="font-medium">Aumento Programado</span>
                             <p className="text-xs text-muted-foreground">Comunique aumento de preços em 30 dias para estimular decisão</p>
@@ -545,21 +557,27 @@ const Anunciar: React.FC = () => {
                     <CardContent>
                       <ul className="space-y-3">
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">1</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">1</span>
+                          </div>
                           <div>
                             <span className="font-medium">"É caro demais"</span>
                             <p className="text-xs text-muted-foreground">Compare com custo de funcionário + cálculo de ROI detalhado</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">2</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">2</span>
+                          </div>
                           <div>
                             <span className="font-medium">"Precisamos pensar"</span>
                             <p className="text-xs text-muted-foreground">Ofereça teste gratuito de 7 dias ou demonstração com dados reais</p>
                           </div>
                         </li>
                         <li className="flex items-start gap-2">
-                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 text-mayk-purple flex items-center justify-center text-xs mt-0.5">3</div>
+                          <div className="h-5 w-5 rounded-full bg-mayk-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-sm font-medium text-mayk-purple">3</span>
+                          </div>
                           <div>
                             <span className="font-medium">"E se não funcionar?"</span>
                             <p className="text-xs text-muted-foreground">Garantia de resultado ou devolução do investimento</p>

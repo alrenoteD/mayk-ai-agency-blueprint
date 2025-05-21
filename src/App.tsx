@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,31 +18,36 @@ import Simuladores from "./pages/Simuladores";
 import Escalar from "./pages/Escalar";
 import Recursos from "./pages/Recursos";
 
+// Create a client
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/fundamentos" element={<Fundamentos />} />
-          <Route path="/ambiente" element={<Ambiente />} />
-          <Route path="/hospedagem" element={<Hospedagem />} />
-          <Route path="/criacao-bots" element={<CriacaoBots />} />
-          <Route path="/integracao-whatsapp" element={<IntegracaoWhatsApp />} />
-          <Route path="/categorias-agentes" element={<CategoriasAgentes />} />
-          <Route path="/anunciar" element={<Anunciar />} />
-          <Route path="/simuladores" element={<Simuladores />} />
-          <Route path="/escalar" element={<Escalar />} />
-          <Route path="/recursos" element={<Recursos />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App: React.FC = () => {
+  return (
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/fundamentos" element={<Fundamentos />} />
+              <Route path="/ambiente" element={<Ambiente />} />
+              <Route path="/hospedagem" element={<Hospedagem />} />
+              <Route path="/criacao-bots" element={<CriacaoBots />} />
+              <Route path="/integracao-whatsapp" element={<IntegracaoWhatsApp />} />
+              <Route path="/categorias-agentes" element={<CategoriasAgentes />} />
+              <Route path="/anunciar" element={<Anunciar />} />
+              <Route path="/simuladores" element={<Simuladores />} />
+              <Route path="/escalar" element={<Escalar />} />
+              <Route path="/recursos" element={<Recursos />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+};
 
 export default App;

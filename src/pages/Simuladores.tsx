@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PageLayout from '@/components/PageLayout';
 import SimulatorCard from '@/components/SimulatorCard';
@@ -18,9 +17,10 @@ const Simuladores: React.FC = () => {
       title="Simuladores de Ganho e Escala" 
       subtitle="Calculadoras interativas para planejar o crescimento da sua agência de IA"
     >
-      <section className="section-padding">
+      <section className="py-12">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* First simulator card */}
             <SimulatorCard
               title="Simulador de Tráfego e Conversão"
               description="Calcule o número de leads e clientes baseado no seu investimento em anúncios"
@@ -79,6 +79,7 @@ const Simuladores: React.FC = () => {
               }}
             />
             
+            {/* Second simulator card */}
             <SimulatorCard
               title="Simulador de Lucratividade"
               description="Calcule a lucratividade do seu negócio de agência de IA"
@@ -146,6 +147,7 @@ const Simuladores: React.FC = () => {
               }}
             />
             
+            {/* Third simulator card */}
             <SimulatorCard
               title="Calculadora de Escalabilidade"
               description="Projete o crescimento da sua agência nos próximos meses"
@@ -195,7 +197,7 @@ const Simuladores: React.FC = () => {
                 
                 return {
                   "Clientes Atuais": inputs.initialClients,
-                  "Clientes em": inputs.months + " meses",
+                  "Clientes em": `${finalClients} (${inputs.months} meses)`,
                   "Receita Atual": formatCurrency(currentRevenue),
                   "Receita Projetada": formatCurrency(projectedRevenue),
                   "Multiplicador de Crescimento": `${growthMultiple.toFixed(1)}x`
@@ -203,6 +205,7 @@ const Simuladores: React.FC = () => {
               }}
             />
             
+            {/* Fourth simulator card */}
             <SimulatorCard
               title="Calculadora de ROI de Bot"
               description="Estime o retorno sobre investimento de um bot para seu cliente"
@@ -266,12 +269,14 @@ const Simuladores: React.FC = () => {
             />
           </div>
           
+          {/* Benchmarks section */}
           <div className="mt-16">
             <h2 className="text-3xl font-bold text-center mb-8">
               Benchmarks de Mercado
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* First benchmark card */}
               <Card className="card-gradient">
                 <CardHeader>
                   <CardTitle>Métricas de Tráfego</CardTitle>
@@ -302,6 +307,7 @@ const Simuladores: React.FC = () => {
                 </CardContent>
               </Card>
               
+              {/* Second benchmark card */}
               <Card className="card-gradient">
                 <CardHeader>
                   <CardTitle>Métricas de Vendas</CardTitle>
@@ -332,6 +338,7 @@ const Simuladores: React.FC = () => {
                 </CardContent>
               </Card>
               
+              {/* Third benchmark card */}
               <Card className="card-gradient">
                 <CardHeader>
                   <CardTitle>Métricas Operacionais</CardTitle>

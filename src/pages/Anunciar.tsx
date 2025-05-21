@@ -49,13 +49,16 @@ const Anunciar: React.FC = () => {
               <TabsTrigger value="formularios">Formulários de Alta Conversão</TabsTrigger>
             </TabsList>
             
+            {/* Facebook Ads tab content */}
             <TabsContent value="facebook" className="space-y-8">
+              {/* Campaign Structure and Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Card className="card-gradient">
                   <CardHeader>
                     <CardTitle>Estrutura de Campanha Ideal</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* Campaign sections */}
                     <div className="space-y-2">
                       <h4 className="font-medium">1. Campanha de Reconhecimento</h4>
                       <p className="text-sm text-muted-foreground">
@@ -102,6 +105,7 @@ const Anunciar: React.FC = () => {
                     <CardTitle>Métricas e Otimizações</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* Metrics sections */}
                     <div className="space-y-2">
                       <h4 className="font-medium">Métricas Principais</h4>
                       <div className="grid grid-cols-2 gap-4">
@@ -147,6 +151,7 @@ const Anunciar: React.FC = () => {
                 </Card>
               </div>
               
+              {/* Simulator section */}
               <div className="mt-12">
                 <h3 className="text-2xl font-bold text-center mb-8">
                   Simulador de Campanhas e Faturamento
@@ -159,6 +164,7 @@ const Anunciar: React.FC = () => {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-6">
+                        {/* Sliders for calculator */}
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <Label htmlFor="dailyBudget">Orçamento Diário</Label>
@@ -248,6 +254,7 @@ const Anunciar: React.FC = () => {
                           </div>
                         </div>
                         
+                        {/* Manual input section */}
                         <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                           <h4 className="text-sm font-medium mb-3">Inserir Valores Manualmente</h4>
                           <div className="grid grid-cols-2 gap-4">
@@ -276,6 +283,7 @@ const Anunciar: React.FC = () => {
                         </div>
                       </div>
                       
+                      {/* Results section */}
                       <div>
                         <div className="p-6 bg-mayk-purple/10 rounded-lg">
                           <h4 className="text-lg font-medium mb-4">Resultados Estimados Mensais</h4>
@@ -323,6 +331,7 @@ const Anunciar: React.FC = () => {
                             </div>
                           </div>
                           
+                          {/* Realistic values section */}
                           <div className="mt-6 p-4 border border-mayk-purple/30 rounded-lg bg-mayk-purple/5">
                             <h5 className="text-sm font-medium mb-2">Valores Realistas por Nível</h5>
                             <div className="grid grid-cols-3 gap-2 text-xs">
@@ -348,6 +357,7 @@ const Anunciar: React.FC = () => {
               </div>
             </TabsContent>
             
+            {/* Ofertas tab content */}
             <TabsContent value="ofertas">
               <div className="space-y-8">
                 <Card className="card-gradient">
@@ -590,6 +600,7 @@ const Anunciar: React.FC = () => {
               </div>
             </TabsContent>
             
+            {/* Criativos tab content */}
             <TabsContent value="criativos">
               <div className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -852,6 +863,7 @@ const Anunciar: React.FC = () => {
               </div>
             </TabsContent>
             
+            {/* Formularios tab content */}
             <TabsContent value="formularios">
               <div className="space-y-8">
                 <Card className="card-gradient">

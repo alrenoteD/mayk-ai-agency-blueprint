@@ -17,6 +17,7 @@ import Anunciar from "./pages/Anunciar";
 import Simuladores from "./pages/Simuladores";
 import Escalar from "./pages/Escalar";
 import Recursos from "./pages/Recursos";
+import ChatbotWidget from "./components/ChatbotWidget";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App: React.FC = () => {
               <Route path="/recursos" element={<Recursos />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <ChatbotWidget />
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>

@@ -1,411 +1,501 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Info } from "lucide-react";
 
-const scaleStages = [
-  {
-    title: "Estágio Inicial (1-5 clientes)",
-    revenue: "R$3.000 - R$10.000/mês",
-    tools: [
-      {
-        category: "Infraestrutura",
-        items: [
-          "VPS básica (2GB RAM, 1 vCPU)",
-          "Hospedagem compartilhada para site",
-          "Domínio com email profissional",
-          "Backup manual"
-        ]
-      },
-      {
-        category: "Ferramentas de IA",
-        items: [
-          "Flowise (instalação básica)",
-          "OpenRouter com crédito inicial",
-          "Z-API para WhatsApp (plano básico)",
-          "GPT-3.5 para maioria dos casos"
-        ]
-      },
-      {
-        category: "Marketing",
-        items: [
-          "Site simples em WordPress",
-          "Perfil LinkedIn/Instagram",
-          "Facebook Ads com orçamento mínimo",
-          "Google Meu Negócio"
-        ]
-      },
-      {
-        category: "Operações",
-        items: [
-          "1 desenvolvedor (você mesmo)",
-          "Atendimento direto pelo fundador",
-          "Processos manuais",
-          "Trello ou Notion para organização"
-        ]
-      }
-    ],
-    next: [
-      "Documente seus processos e crie templates reutilizáveis",
-      "Colete depoimentos e casos de sucesso dos primeiros clientes",
-      "Defina um nicho específico para se especializar",
-      "Inicie criação de conteúdo educacional para atrair leads"
-    ]
-  },
-  {
-    title: "Crescimento (5-15 clientes)",
-    revenue: "R$10.000 - R$30.000/mês",
-    tools: [
-      {
-        category: "Infraestrutura",
-        items: [
-          "VPS dedicada (4-8GB RAM, 2-4 vCPUs)",
-          "Servidor web separado com CDN",
-          "Backup automatizado",
-          "Monitoramento básico 24/7"
-        ]
-      },
-      {
-        category: "Ferramentas de IA",
-        items: [
-          "Flowise com componentes customizados",
-          "Twilio ou 360dialog para WhatsApp",
-          "Múltiplos modelos de IA especializados",
-          "Sistema de fallback entre modelos"
-        ]
-      },
-      {
-        category: "Marketing",
-        items: [
-          "Site profissional com blog",
-          "CRM para gestão de leads",
-          "Funil de vendas estruturado",
-          "Email marketing e automação",
-          "Facebook/Google Ads com orçamento otimizado"
-        ]
-      },
-      {
-        category: "Operações",
-        items: [
-          "1-2 desenvolvedores",
-          "Assistente administrativo",
-          "Atendente de suporte",
-          "Processos semi-automatizados",
-          "Contratos e SLAs padronizados"
-        ]
-      }
-    ],
-    next: [
-      "Desenvolva uma biblioteca de componentes reutilizáveis",
-      "Crie processos de onboarding padronizados para novos clientes",
-      "Implemente SLAs e sistema de suporte estruturado",
-      "Explore parcerias estratégicas com outras empresas"
-    ]
-  },
-  {
-    title: "Escala (15+ clientes)",
-    revenue: "R$30.000+/mês",
-    tools: [
-      {
-        category: "Infraestrutura",
-        items: [
-          "Cluster de servidores ou nuvem escalável",
-          "Load balancers e redundância",
-          "Monitoramento avançado e alertas",
-          "Disaster recovery plan",
-          "CI/CD para deploy contínuo"
-        ]
-      },
-      {
-        category: "Ferramentas de IA",
-        items: [
-          "API oficial do WhatsApp Business",
-          "Sistemas proprietários ou LangChain",
-          "IA especializada por vertical de negócio",
-          "Fine-tuning de modelos próprios",
-          "Vetorização e RAG avançados"
-        ]
-      },
-      {
-        category: "Marketing",
-        items: [
-          "Marca consolidada e reconhecida",
-          "Marketing multicanal integrado",
-          "Equipe de vendas especializada",
-          "Webinars e eventos recorrentes",
-          "Análise avançada de dados de marketing"
-        ]
-      },
-      {
-        category: "Operações",
-        items: [
-          "Equipe técnica especializada",
-          "Gerentes de projeto dedicados",
-          "Equipe de customer success",
-          "Processos documentados e automatizados",
-          "Treinamento contínuo"
-        ]
-      }
-    ],
-    next: [
-      "Desenvolva produtos proprietários além de serviços",
-      "Considere financiamento para expansão acelerada",
-      "Explore internacionalização dos serviços",
-      "Crie modelo de parceria ou franquia",
-      "Implemente gestão por OKRs"
-    ]
-  }
-];
+interface ScaleStage {
+  title: string;
+  revenue: string;
+  clients: string;
+  tools: {
+    category: string;
+    items: string[];
+  }[];
+  nextSteps: string[];
+}
 
-const transitionPoints = [
-  {
-    title: "De Iniciante para Crescimento",
-    description: "Quando fazer a transição do estágio inicial para o de crescimento",
-    triggers: [
-      "Volume de atendimentos excede 1.000 mensagens/dia por cliente",
-      "Tempo de resposta do Flowise ultrapassa 5 segundos",
-      "Número de clientes simultâneos superior a 5",
-      "Necessidade de personalizações complexas no Flowise",
-      "Problemas recorrentes de estabilidade"
-    ],
-    transitions: [
-      {
-        from: "Flowise básico em VPS simples",
-        to: "Flowise em cluster ou com recursos dedicados"
-      },
-      {
-        from: "Z-API básico",
-        to: "Z-API Business ou Twilio/360dialog"
-      },
-      {
-        from: "Templates genéricos de bots",
-        to: "Bots customizados por vertical"
-      },
-      {
-        from: "Atendimento direto pelo fundador",
-        to: "Equipe de suporte estruturada"
-      }
-    ]
-  },
-  {
-    title: "De Crescimento para Escala",
-    description: "Quando fazer a transição da fase de crescimento para a de escala completa",
-    triggers: [
-      "Mais de 15 clientes ativos com alta demanda",
-      "Limitações técnicas do Flowise mesmo com recursos adequados",
-      "Necessidade de personalização profunda dos modelos de IA",
-      "Requisitos de segurança e compliance mais rigorosos",
-      "Limitações das soluções de terceiros para WhatsApp"
-    ],
-    transitions: [
-      {
-        from: "Flowise em servidor dedicado",
-        to: "Solução proprietária baseada em LangChain ou similares"
-      },
-      {
-        from: "Provedores intermediários de WhatsApp",
-        to: "API oficial do WhatsApp Business"
-      },
-      {
-        from: "Modelos de IA genéricos",
-        to: "Fine-tuning de modelos para casos específicos"
-      },
-      {
-        from: "Processos semi-automatizados",
-        to: "Sistema completo de gestão e automação"
-      }
-    ]
-  }
-];
-
-const advancedTechniques = [
-  {
-    title: "Vetorização e RAG Avançado",
-    description: "Técnicas avançadas de Retrieval Augmented Generation para melhorar a qualidade das respostas",
-    techniques: [
-      "Implementação de bancos vetoriais como Pinecone ou Qdrant",
-      "Chunking inteligente de documentos com sobreposição",
-      "Metadata filtering para resultados mais precisos",
-      "Reranking de resultados usando modelos específicos",
-      "Hybrid search combinando vetores e keywords"
-    ]
-  },
-  {
-    title: "Fine-tuning e Modelos Personalizados",
-    description: "Criação de modelos personalizados para casos de uso específicos",
-    techniques: [
-      "LoRA (Low-Rank Adaptation) para adaptação eficiente",
-      "Fine-tuning supervisionado com dados proprietários",
-      "RLHF (Reinforcement Learning from Human Feedback)",
-      "Criação de datasets sintéticos para treinamento",
-      "Distilação de modelos para melhor performance"
-    ]
-  },
-  {
-    title: "Automação Avançada",
-    description: "Técnicas de automação para escalar operações",
-    techniques: [
-      "Implementação de Function Calling para ações estruturadas",
-      "Integração com APIs externas via OpenAI Actions",
-      "Criação de agentes autônomos com ReAct pattern",
-      "Pipeline de validação automatizada de respostas",
-      "Roteamento inteligente entre modelos por complexidade"
-    ]
-  },
-  {
-    title: "Infraestrutura Robusta",
-    description: "Criação de infraestrutura escalável e resiliente",
-    techniques: [
-      "Arquitetura de microserviços para componentes do sistema",
-      "Sistema de filas para processamento assíncrono (RabbitMQ/Kafka)",
-      "Cache inteligente de embeddings e respostas frequentes",
-      "Monitoramento avançado com alertas preditivos",
-      "Deployment via Kubernetes para alta disponibilidade"
-    ]
-  }
-];
+interface ToolTransition {
+  category: string;
+  basicTool: string;
+  intermediateTool: string;
+  advancedTool: string;
+  whenToUpgrade: string;
+}
 
 const Escalar: React.FC = () => {
+  const [showClientInfo, setShowClientInfo] = useState(false);
+
+  const scaleStages: ScaleStage[] = [
+    {
+      title: "Iniciante",
+      revenue: "R$3.000 - R$10.000/mês",
+      clients: "1-5 clientes",
+      tools: [
+        {
+          category: "IA e Automação",
+          items: ["Flowise (local/VPS básica)", "Z-API para WhatsApp", "OpenRouter (crédito inicial)"]
+        },
+        {
+          category: "Infraestrutura",
+          items: ["VPS básica (2GB RAM)", "Domínio com email profissional", "Cloudflare (gratuito)"]
+        },
+        {
+          category: "Marketing",
+          items: ["Site simples", "Perfil Instagram", "Facebook Ads (orçamento baixo)"]
+        }
+      ],
+      nextSteps: [
+        "Documente seus processos",
+        "Crie templates reutilizáveis para bots",
+        "Colete depoimentos dos primeiros clientes",
+        "Defina nichos específicos para especialização"
+      ]
+    },
+    {
+      title: "Em Crescimento",
+      revenue: "R$10.000 - R$30.000/mês",
+      clients: "5-15 clientes",
+      tools: [
+        {
+          category: "IA e Automação",
+          items: ["Flowise (VPS dedicada)", "Twilio ou 360dialog", "APIs de IA diversificadas", "Serviço de fallback"]
+        },
+        {
+          category: "Infraestrutura",
+          items: ["VPS robusta (8GB+ RAM)", "CDN otimizado", "Backup automatizado", "Monitoramento 24/7"]
+        },
+        {
+          category: "Marketing e Vendas",
+          items: ["CRM completo", "Funil de vendas estruturado", "Conteúdo especializado", "Webinars e demonstrações"]
+        }
+      ],
+      nextSteps: [
+        "Contrate assistentes para tarefas repetitivas",
+        "Desenvolva uma biblioteca de componentes reutilizáveis",
+        "Implemente SLAs e suporte estruturado",
+        "Explore parcerias estratégicas"
+      ]
+    },
+    {
+      title: "Escala",
+      revenue: "R$30.000+/mês",
+      clients: "15+ clientes",
+      tools: [
+        {
+          category: "IA e Automação",
+          items: ["API oficial do WhatsApp Business", "Cluster de servidores", "IA especializada por vertical", "CI/CD para desenvolvimento rápido"]
+        },
+        {
+          category: "Infraestrutura",
+          items: ["Infraestrutura em nuvem escalável", "Load balancers", "Monitoramento avançado", "Equipe DevOps"]
+        },
+        {
+          category: "Operações",
+          items: ["Equipe especializada por função", "Processos documentados", "Treinamento contínuo", "Software proprietário"]
+        }
+      ],
+      nextSteps: [
+        "Desenvolva produtos próprios além de serviços",
+        "Considere financiamento para expansão",
+        "Estabeleça núcleos de inovação internos",
+        "Expanda para novos mercados geográficos"
+      ]
+    }
+  ];
+
+  const toolTransitions: ToolTransition[] = [
+    {
+      category: "Criação de Fluxos",
+      basicTool: "Flowise em VPS pequena",
+      intermediateTool: "Flowise em VPS dedicada",
+      advancedTool: "Langchain / framework próprio",
+      whenToUpgrade: "Quando tiver mais de 10 bots ativos ou precisar de customizações profundas"
+    },
+    {
+      category: "Integração WhatsApp",
+      basicTool: "Z-API (plano básico)",
+      intermediateTool: "Z-API (plano empresarial) / Twilio",
+      advancedTool: "WhatsApp Business API",
+      whenToUpgrade: "Quando ultrapassar 1.000 mensagens/dia ou precisar de múltiplas linhas"
+    },
+    {
+      category: "APIs de IA",
+      basicTool: "OpenRouter",
+      intermediateTool: "OpenAI / Claude com fallback",
+      advancedTool: "Mix de provedores com caching",
+      whenToUpgrade: "Quando o custo de API ultrapassar R$500/mês"
+    },
+    {
+      category: "Automação",
+      basicTool: "Webhooks simples",
+      intermediateTool: "N8N / Make",
+      advancedTool: "Microserviços próprios",
+      whenToUpgrade: "Quando tiver mais de 5 integrações complexas ou alto volume"
+    },
+    {
+      category: "Banco de Dados",
+      basicTool: "Arquivos JSON / Chroma",
+      intermediateTool: "MongoDB / Supabase",
+      advancedTool: "Postgres com vector search / Pinecone",
+      whenToUpgrade: "Quando tiver mais de 20 bases de conhecimento ou muitas consultas simultâneas"
+    },
+    {
+      category: "Hospedagem",
+      basicTool: "VPS simples (Contabo/Hetzner)",
+      intermediateTool: "VPS otimizada com redundância",
+      advancedTool: "Kubernetes / Serviços gerenciados",
+      whenToUpgrade: "Quando ultrapassar 80% de uso de CPU/RAM ou precisar de uptime garantido"
+    }
+  ];
+
   return (
     <PageLayout 
-      title="Como Escalar sua Agência" 
-      subtitle="Estratégias, ferramentas e pontos de transição para crescimento sustentável"
+      title="Quando e Como Escalar" 
+      subtitle="Guia para crescer sua agência de IA e saber quando migrar para soluções mais avançadas"
     >
       <section className="section-padding">
         <div className="container mx-auto">
           <div className="mb-12">
-            <h2 className="text-3xl font-bold text-center mb-6">Estágios de Crescimento</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto">
-              Cada estágio de crescimento da sua agência de IA requer diferentes ferramentas, processos e estratégias.
-              Conheça o que é necessário em cada fase e planeje sua evolução.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {scaleStages.map((stage, index) => (
-              <Card key={index} className={`card-gradient ${
-                index === 0 ? 'border-blue-300 dark:border-blue-800' : 
-                index === 1 ? 'border-purple-300 dark:border-purple-800' : 
-                'border-teal-300 dark:border-teal-800'
-              } border-2`}>
-                <CardHeader>
-                  <CardTitle className={
-                    index === 0 ? 'text-blue-600 dark:text-blue-400' : 
-                    index === 1 ? 'text-purple-600 dark:text-purple-400' : 
-                    'text-teal-600 dark:text-teal-400'
-                  }>
-                    {stage.title}
-                  </CardTitle>
-                  <p className="text-muted-foreground font-medium">{stage.revenue}</p>
-                </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="infraestrutura" className="w-full">
-                    <TabsList className="grid grid-cols-2 mb-4">
-                      <TabsTrigger value="infraestrutura">Ferramentas</TabsTrigger>
-                      <TabsTrigger value="next">Próximos Passos</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="infraestrutura">
-                      {stage.tools.map((toolCategory, i) => (
-                        <div key={i} className="mb-4">
-                          <h4 className="text-sm font-semibold mb-2">{toolCategory.category}</h4>
+            <Alert className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 mb-8">
+              <Info className="h-4 w-4 text-amber-800 dark:text-amber-400" />
+              <AlertTitle className="text-amber-800 dark:text-amber-400">Nota sobre os estágios de crescimento</AlertTitle>
+              <AlertDescription className="text-amber-700 dark:text-amber-300">
+                Os valores apresentados consideram clientes ativos recorrentes, não apenas gerados no mês.
+                O faturamento representa receitas mensais contínuas (não projetos pontuais).
+                <button 
+                  onClick={() => setShowClientInfo(!showClientInfo)} 
+                  className="text-mayk-purple underline ml-2"
+                >
+                  {showClientInfo ? "Ocultar detalhes" : "Ver mais detalhes"}
+                </button>
+              </AlertDescription>
+              
+              {showClientInfo && (
+                <div className="mt-4 pl-4 border-l-2 border-amber-300 dark:border-amber-700">
+                  <p className="text-sm text-amber-700 dark:text-amber-300 mb-2">
+                    <strong>Modelo de Negócio:</strong> O modelo recomendado para agências de IA combina:
+                  </p>
+                  <ul className="list-disc pl-5 text-sm text-amber-700 dark:text-amber-300 space-y-1 mb-2">
+                    <li><strong>Taxa de setup inicial:</strong> Para cobrir custos de implementação (R$1.000-3.000)</li>
+                    <li><strong>Mensalidade recorrente:</strong> Para manutenção, hospedagem e suporte (R$500-2.000/mês)</li>
+                  </ul>
+                  <p className="text-sm text-amber-700 dark:text-amber-300">
+                    A escalabilidade deste negócio está em aumentar o número de clientes recorrentes,
+                    tornando seus processos mais eficientes para atender mais clientes com a mesma equipe.
+                  </p>
+                </div>
+              )}
+            </Alert>
+
+            <h2 className="text-3xl font-bold text-center mb-8">
+              Estágios de Crescimento
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {scaleStages.map((stage, index) => (
+                <div key={index} className="flex flex-col">
+                  <Card className="card-gradient flex-grow">
+                    <CardHeader className="border-b border-border pb-4">
+                      <CardTitle className="text-xl text-center">
+                        <span className={index === 0 ? "text-blue-500" : index === 1 ? "text-purple-500" : "text-teal-500"}>
+                          {stage.title}
+                        </span>
+                      </CardTitle>
+                      <CardDescription className="text-center">
+                        {stage.revenue} • {stage.clients}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      {stage.tools.map((toolCategory, idx) => (
+                        <div key={idx} className="mb-6">
+                          <h4 className="font-medium text-sm mb-2">{toolCategory.category}</h4>
                           <ul className="list-disc pl-5 space-y-1 text-sm">
-                            {toolCategory.items.map((item, j) => (
-                              <li key={j}>{item}</li>
+                            {toolCategory.items.map((item, i) => (
+                              <li key={i}>{item}</li>
                             ))}
                           </ul>
                         </div>
                       ))}
-                    </TabsContent>
-                    
-                    <TabsContent value="next">
-                      <h4 className="text-sm font-semibold mb-2">Próximos Passos</h4>
-                      <ul className="list-disc pl-5 space-y-2 text-sm">
-                        {stage.next.map((item, i) => (
-                          <li key={i}>{item}</li>
+                      <div>
+                        <h4 className="font-medium text-sm mb-2">Próximos Passos</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                          {stage.nextSteps.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  {index < scaleStages.length - 1 && (
+                    <div className="hidden md:flex justify-center my-4">
+                      <div className="w-8 h-8 rounded-full bg-mayk-purple/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-mayk-purple">
+                          <path d="M5 12h14"></path>
+                          <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-center mb-8">
+              Limites Técnicos e Quando Atualizar
+            </h2>
+            
+            <Tabs defaultValue="por-ferramenta" className="w-full">
+              <TabsList className="grid grid-cols-2 mb-8">
+                <TabsTrigger value="por-ferramenta">Por Ferramenta</TabsTrigger>
+                <TabsTrigger value="por-volume">Por Volume</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="por-ferramenta">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quando Substituir Cada Ferramenta</CardTitle>
+                    <CardDescription>
+                      Use esta tabela para planejar suas migrações técnicas à medida que sua agência cresce
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[180px]">Categoria</TableHead>
+                          <TableHead>Solução Inicial</TableHead>
+                          <TableHead>Nível Intermediário</TableHead>
+                          <TableHead>Nível Avançado</TableHead>
+                          <TableHead className="w-[250px]">Quando Atualizar</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {toolTransitions.map((tool, i) => (
+                          <TableRow key={i}>
+                            <TableCell className="font-medium">{tool.category}</TableCell>
+                            <TableCell>{tool.basicTool}</TableCell>
+                            <TableCell>{tool.intermediateTool}</TableCell>
+                            <TableCell>{tool.advancedTool}</TableCell>
+                            <TableCell className="text-sm">{tool.whenToUpgrade}</TableCell>
+                          </TableRow>
                         ))}
-                      </ul>
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="mt-16 mb-12">
-            <h2 className="text-3xl font-bold text-center mb-6">Pontos de Transição</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto">
-              Identificar o momento certo para evoluir sua infraestrutura e processos é crucial para o crescimento sustentável.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            {transitionPoints.map((point, index) => (
-              <Card key={index} className="card-gradient">
-                <CardHeader>
-                  <CardTitle>{point.title}</CardTitle>
-                  <p className="text-muted-foreground">{point.description}</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold mb-2">Gatilhos para mudança:</h4>
-                    <ul className="list-disc pl-5 space-y-1 text-sm">
-                      {point.triggers.map((trigger, i) => (
-                        <li key={i}>{trigger}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-semibold mb-2">Transições principais:</h4>
-                    <div className="space-y-3">
-                      {point.transitions.map((transition, i) => (
-                        <div key={i} className="flex items-center">
-                          <div className="text-sm flex-grow">
-                            <span className="text-gray-600 dark:text-gray-400">{transition.from}</span>
-                            <div className="flex items-center my-1">
-                              <div className="flex-grow h-0.5 bg-gray-300 dark:bg-gray-700"></div>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-2">
-                                <path d="M5 12h14"></path>
-                                <path d="m12 5 7 7-7 7"></path>
-                              </svg>
-                              <div className="flex-grow h-0.5 bg-gray-300 dark:bg-gray-700"></div>
-                            </div>
-                            <span className="font-medium text-mayk-purple dark:text-mayk-teal">{transition.to}</span>
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="por-volume">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Limites de Volume por Solução</CardTitle>
+                    <CardDescription>
+                      Análise dos limites de escala por volume de uso
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-8">
+                      <div>
+                        <h3 className="text-lg font-medium mb-4">Flowise</h3>
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Card className="bg-green-50 dark:bg-green-900/20">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-base">Servidor Básico (2GB RAM)</CardTitle>
+                                <CardDescription>Até 5 bots ativos</CardDescription>
+                              </CardHeader>
+                              <CardContent className="text-sm">
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Até 300 interações por dia</li>
+                                  <li>Fluxos simples (5-10 nós)</li>
+                                  <li>Sem RAG complexo</li>
+                                  <li>Tempo de resposta: 2-5s</li>
+                                </ul>
+                              </CardContent>
+                            </Card>
+                            
+                            <Card className="bg-yellow-50 dark:bg-yellow-900/20">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-base">Servidor Médio (4-8GB RAM)</CardTitle>
+                                <CardDescription>5-15 bots ativos</CardDescription>
+                              </CardHeader>
+                              <CardContent className="text-sm">
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Até 1.000 interações por dia</li>
+                                  <li>Fluxos médios (até 20 nós)</li>
+                                  <li>RAG básico (menos de 10 docs)</li>
+                                  <li>Tempo de resposta: 1-3s</li>
+                                </ul>
+                              </CardContent>
+                            </Card>
+                            
+                            <Card className="bg-red-50 dark:bg-red-900/20">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-base">Servidor Grande (16GB+ RAM)</CardTitle>
+                                <CardDescription>Mais de 15 bots</CardDescription>
+                              </CardHeader>
+                              <CardContent className="text-sm">
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Considerar múltiplos servidores</li>
+                                  <li>Ou migrar para Langchain</li>
+                                  <li>RAG com bases grandes</li>
+                                  <li>Cargas variáveis</li>
+                                </ul>
+                              </CardContent>
+                            </Card>
+                          </div>
+                          
+                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                            <h4 className="font-medium text-blue-800 dark:text-blue-400 mb-2">Dica de Performance</h4>
+                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                              Uma prática recomendada ao escalar é separar os bots com maior uso em instâncias dedicadas,
+                              em vez de tentar manter todos em uma única instância grande. Isso isola problemas e 
+                              facilita a manutenção.
+                            </p>
                           </div>
                         </div>
-                      ))}
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-lg font-medium mb-4">Integrações com WhatsApp</h3>
+                        <div className="space-y-4">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>API</TableHead>
+                                <TableHead>Limite de Mensagens</TableHead>
+                                <TableHead>Custo</TableHead>
+                                <TableHead>Confiabilidade</TableHead>
+                                <TableHead>Melhor Para</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell className="font-medium">Z-API (Base)</TableCell>
+                                <TableCell>~1.000/dia</TableCell>
+                                <TableCell>R$100-200/mês</TableCell>
+                                <TableCell>Média</TableCell>
+                                <TableCell>Iniciantes</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">Z-API (Business)</TableCell>
+                                <TableCell>~5.000/dia</TableCell>
+                                <TableCell>R$250-450/mês</TableCell>
+                                <TableCell>Boa</TableCell>
+                                <TableCell>Pequena/média escala</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">Twilio</TableCell>
+                                <TableCell>~10.000/dia</TableCell>
+                                <TableCell>$0.005/msg + mensalidade</TableCell>
+                                <TableCell>Muito boa</TableCell>
+                                <TableCell>Média escala</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell className="font-medium">WA Business API</TableCell>
+                                <TableCell>Ilimitado</TableCell>
+                                <TableCell>Variável por uso</TableCell>
+                                <TableCell>Excelente</TableCell>
+                                <TableCell>Grande escala/Enterprise</TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                          
+                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                            <h4 className="font-medium text-blue-800 dark:text-blue-400 mb-2">Conexões Múltiplas</h4>
+                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                              Ao chegar em um nível intermediário, considere implementar um middleware próprio que possa
+                              alternar entre diferentes provedores de API WhatsApp em caso de falha de um deles,
+                              garantindo redundância para seus clientes mais importantes.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </CardContent>
+                  <CardFooter className="bg-gray-50 dark:bg-gray-800/50 border-t">
+                    <p className="text-sm text-muted-foreground">
+                      Os limites exatos podem variar dependendo da complexidade dos fluxos, latência de API e outros fatores.
+                      Sempre monitore o desempenho real antes de tomar decisões de escala.
+                    </p>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+          
+          <div>
+            <h2 className="text-3xl font-bold text-center mb-8">
+              Fluxo de Transição Técnica
+            </h2>
+            
+            <div className="max-w-4xl mx-auto p-6 bg-mayk-purple/5 border border-mayk-purple/20 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                  <div className="h-12 w-12 rounded-full bg-mayk-purple/20 flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-mayk-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="mt-16 mb-12">
-            <h2 className="text-3xl font-bold text-center mb-6">Técnicas Avançadas</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto">
-              Conheça as técnicas avançadas que permitirão sua agência se destacar na fase de escala.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {advancedTechniques.map((technique, index) => (
-              <Card key={index} className="card-gradient">
-                <CardHeader>
-                  <CardTitle>{technique.title}</CardTitle>
-                  <p className="text-muted-foreground">{technique.description}</p>
-                </CardHeader>
-                <CardContent>
+                  <h3 className="text-xl font-semibold text-center mb-3">Fase 1: Validação</h3>
                   <ul className="list-disc pl-5 space-y-2 text-sm">
-                    {technique.techniques.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
+                    <li><strong>Tools:</strong> Flowise + Z-API Básico</li>
+                    <li><strong>Stack:</strong> VPS simples e chaves API gratuitas/baratas</li>
+                    <li><strong>Foco:</strong> Provar viabilidade do modelo de negócio</li>
+                    <li><strong>Meta:</strong> 5 clientes pagantes e processos documentados</li>
                   </ul>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+                
+                <div>
+                  <div className="h-12 w-12 rounded-full bg-mayk-purple/20 flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-mayk-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-center mb-3">Fase 2: Otimização</h3>
+                  <ul className="list-disc pl-5 space-y-2 text-sm">
+                    <li><strong>Tools:</strong> Flowise otimizado + Z-API Business/Twilio</li>
+                    <li><strong>Stack:</strong> VPS dedicada, monitoramento, backups</li>
+                    <li><strong>Foco:</strong> Processos, automação, biblioteca de componentes</li>
+                    <li><strong>Meta:</strong> 15 clientes com custo operacional otimizado</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <div className="h-12 w-12 rounded-full bg-mayk-purple/20 flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-mayk-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-center mb-3">Fase 3: Escala</h3>
+                  <ul className="list-disc pl-5 space-y-2 text-sm">
+                    <li><strong>Tools:</strong> Combinação Flowise + Langchain ou solução própria</li>
+                    <li><strong>Stack:</strong> Arquitetura distribuída, múltiplos servidores</li>
+                    <li><strong>Foco:</strong> Escalabilidade, redundância, personalização profunda</li>
+                    <li><strong>Meta:</strong> 30+ clientes com equipe especializada</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-12 grid grid-cols-3 gap-8">
+                <div className="h-1 bg-gray-200 dark:bg-gray-700 rounded flex-1 mt-4 col-span-3"></div>
+              </div>
+              
+              <div className="mt-8 text-center">
+                <h4 className="font-medium mb-2">Recomendação Final</h4>
+                <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                  Espere até ter <strong>pelo menos 10 clientes ativos</strong> antes de fazer grandes investimentos em 
+                  infraestrutura ou migrações complexas. O foco inicial deve ser em conseguir clientes e refinar os processos, 
+                  não na otimização prematura da stack técnica.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

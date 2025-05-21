@@ -1,310 +1,217 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const agentCategories = {
-  "atendimento": {
-    title: "Atendimento ao Cliente",
-    description: "Bots para automatizar e melhorar o atendimento ao cliente",
-    agents: [
-      {
-        name: "Chatbot de SAC",
-        description: "Responde dúvidas frequentes, registra reclamações e direciona para atendentes humanos quando necessário",
-        features: [
-          "Sistema de FAQ dinâmico",
-          "Identificação de intent do cliente",
-          "Escalação inteligente para humanos",
-          "Acesso a histórico de pedidos"
-        ],
-        implementation: "Use o Flowise com memória de buffer e integração com CRM"
-      },
-      {
-        name: "Assistente de Pós-Venda",
-        description: "Acompanha clientes após a compra, solicita feedback e oferece ajuda proativamente",
-        features: [
-          "Lembretes automáticos",
-          "Coleta de feedbacks",
-          "Sugestões personalizadas",
-          "Resolução de problemas comuns"
-        ],
-        implementation: "Combine Flowise com automação temporizada e base de conhecimento de produtos"
-      },
-      {
-        name: "Triagem de Suporte Técnico",
-        description: "Identifica e categoriza problemas técnicos antes de encaminhar para a equipe adequada",
-        features: [
-          "Diagnóstico inicial de problemas",
-          "Soluções para questões simples",
-          "Coleta de informações técnicas",
-          "Categorização de tickets"
-        ],
-        implementation: "Use Retrieval QA com documentação técnica e integração com sistema de tickets"
-      }
-    ]
-  },
-  "vendas": {
-    title: "Vendas e Conversão",
-    description: "Agentes focados em gerar leads e converter vendas",
-    agents: [
-      {
-        name: "Qualificador de Leads",
-        description: "Avalia e qualifica leads iniciais para o time de vendas",
-        features: [
-          "Perguntas qualificadoras personalizadas",
-          "Scoring de leads",
-          "Agendamento com vendedores",
-          "Captura de dados para CRM"
-        ],
-        implementation: "Use Flowise com memória persistente e integração com seu CRM via webhook"
-      },
-      {
-        name: "Assistente de Vendas",
-        description: "Apresenta produtos, responde objeções e conduz o cliente pelo funil de vendas",
-        features: [
-          "Catálogo de produtos dinâmico",
-          "Respostas a objeções comuns",
-          "Upsell e cross-sell inteligente",
-          "Fechamento de vendas simples"
-        ],
-        implementation: "Use RAG com sua base de produtos e treinamento específico para vendas"
-      },
-      {
-        name: "Reativador de Clientes",
-        description: "Recupera clientes inativos com ofertas personalizadas",
-        features: [
-          "Análise de histórico de compras",
-          "Ofertas exclusivas personalizadas",
-          "Identificação de motivos de abandono",
-          "Sequência de reconversão"
-        ],
-        implementation: "Integre com seu banco de dados de clientes e sistema de descontos"
-      }
-    ]
-  },
-  "agendamento": {
-    title: "Agendamento e Reservas",
-    description: "Bots para gerenciar agendas, marcar compromissos e reservas",
-    agents: [
-      {
-        name: "Agendador de Consultas",
-        description: "Marca, remarca e cancela consultas ou atendimentos",
-        features: [
-          "Visualização da agenda disponível",
-          "Confirmação automática",
-          "Lembretes antes do compromisso",
-          "Reagendamento simplificado"
-        ],
-        implementation: "Integre com Google Calendar ou outro sistema de agenda via API"
-      },
-      {
-        name: "Gerenciador de Reservas",
-        description: "Gerencia reservas para restaurantes, hotéis ou serviços",
-        features: [
-          "Verificação de disponibilidade em tempo real",
-          "Personalização de reservas",
-          "Processamento de pedidos especiais",
-          "Confirmações e modificações"
-        ],
-        implementation: "Use N8N para integrar sistemas de reserva com o Flowise"
-      },
-      {
-        name: "Coordenador de Eventos",
-        description: "Organiza participantes e detalhes de eventos corporativos ou sociais",
-        features: [
-          "Envio de convites",
-          "Registro de participantes",
-          "Lembretes e atualizações",
-          "Coleta de confirmações"
-        ],
-        implementation: "Combine Flowise com sistemas de email marketing e gestão de eventos"
-      }
-    ]
-  },
-  "educacional": {
-    title: "Educação e Treinamento",
-    description: "Agentes para ensinar, treinar e apoiar o aprendizado",
-    agents: [
-      {
-        name: "Tutor Personalizado",
-        description: "Oferece explicações detalhadas e exercícios adaptados ao nível do aluno",
-        features: [
-          "Explicações passo a passo",
-          "Exercícios adaptados ao nível",
-          "Feedback detalhado",
-          "Plano de estudos personalizado"
-        ],
-        implementation: "Use Claude ou GPT-4 com contexto amplo e base de conhecimento educacional"
-      },
-      {
-        name: "Assistente de Curso",
-        description: "Responde dúvidas sobre um curso específico e fornece recursos complementares",
-        features: [
-          "FAQ do curso",
-          "Materiais complementares",
-          "Lembretes de prazos",
-          "Explicações de conceitos-chave"
-        ],
-        implementation: "RAG com material do curso e conexão com LMS se disponível"
-      },
-      {
-        name: "Simulador de Provas",
-        description: "Cria simulados e avalia respostas para preparação para provas",
-        features: [
-          "Geração de questões personalizadas",
-          "Feedback detalhado",
-          "Estatísticas de desempenho",
-          "Foco em áreas de dificuldade"
-        ],
-        implementation: "Flowise com Function Calling para avaliação estruturada de respostas"
-      }
-    ]
-  },
-  "analise": {
-    title: "Análise e Business Intelligence",
-    description: "Agentes especializados em dados e insights de negócio",
-    agents: [
-      {
-        name: "Analista de Dados",
-        description: "Interpreta dados empresariais e gera relatórios sob demanda",
-        features: [
-          "Consultas em linguagem natural",
-          "Visualização de dados simplificada",
-          "Identificação de tendências",
-          "Relatórios personalizados"
-        ],
-        implementation: "Integre com SQL e ferramentas de BI via API ou plugins"
-      },
-      {
-        name: "Monitor de Métricas",
-        description: "Acompanha KPIs e alerta sobre desvios significativos",
-        features: [
-          "Monitoramento contínuo",
-          "Alertas personalizados",
-          "Análise de causa raiz",
-          "Recomendações de ação"
-        ],
-        implementation: "Use N8N para monitoramento e Flowise para análise e comunicação"
-      },
-      {
-        name: "Gerador de Insights",
-        description: "Analisa grandes volumes de dados para extrair insights acionáveis",
-        features: [
-          "Análise multidimensional",
-          "Correlações não óbvias",
-          "Previsões simples",
-          "Recomendações de estratégia"
-        ],
-        implementation: "Combine ferramentas de análise com LLMs via funções personalizadas"
-      }
-    ]
-  },
-  "produtividade": {
-    title: "Produtividade Pessoal",
-    description: "Assistentes para aumentar produtividade e organização",
-    agents: [
-      {
-        name: "Gerenciador de Tarefas",
-        description: "Ajuda a organizar, priorizar e acompanhar tarefas pessoais ou de equipe",
-        features: [
-          "Criação e organização de tarefas",
-          "Lembretes inteligentes",
-          "Priorização contextual",
-          "Delegação e acompanhamento"
-        ],
-        implementation: "Integre com Todoist, Microsoft Todo ou outros apps via API"
-      },
-      {
-        name: "Assistente de Reuniões",
-        description: "Prepara pautas, toma notas e distribui atas de reuniões",
-        features: [
-          "Templates de pauta",
-          "Transcrição e resumo",
-          "Extração de itens de ação",
-          "Distribuição de atas"
-        ],
-        implementation: "Combine com ferramentas de transcrição e integre com calendários e email"
-      },
-      {
-        name: "Coach de Produtividade",
-        description: "Oferece técnicas e feedback para melhorar a produtividade pessoal",
-        features: [
-          "Técnicas personalizadas de produtividade",
-          "Acompanhamento de hábitos",
-          "Análise de padrões de trabalho",
-          "Recomendações contextuais"
-        ],
-        implementation: "Use LLMs com prompt engineering para análise comportamental"
-      }
-    ]
-  }
-};
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { AgentType, agentTypes } from "@/data/agentTypes";
 
 const CategoriasAgentes: React.FC = () => {
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+  const selectedAgent = selectedAgentId ? agentTypes.find(agent => agent.id === selectedAgentId) : null;
+
   return (
     <PageLayout 
-      title="Categorias de Agentes" 
-      subtitle="Explore diferentes tipos de agentes de IA para diversos setores e necessidades"
+      title="Categorias de Agentes de IA" 
+      subtitle="Conheça os diversos tipos de agentes que você pode criar e suas aplicações"
     >
       <section className="section-padding">
         <div className="container mx-auto">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-center mb-6">Biblioteca de Agentes</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto">
-              Descubra diferentes categorias de agentes de IA que sua agência pode criar e oferecer
-              para seus clientes. Cada agente possui características e implementações específicas.
-            </p>
-          </div>
-          
-          <Tabs defaultValue="atendimento" className="w-full">
-            <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-8">
-              <TabsTrigger value="atendimento">Atendimento</TabsTrigger>
-              <TabsTrigger value="vendas">Vendas</TabsTrigger>
-              <TabsTrigger value="agendamento">Agendamento</TabsTrigger>
-              <TabsTrigger value="educacional">Educação</TabsTrigger>
-              <TabsTrigger value="analise">Análise</TabsTrigger>
-              <TabsTrigger value="produtividade">Produtividade</TabsTrigger>
-            </TabsList>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1 space-y-4">
+              <h3 className="text-2xl font-semibold mb-4">Tipos de Agentes</h3>
+              
+              {agentTypes.map((agent) => (
+                <Card 
+                  key={agent.id}
+                  className={`cursor-pointer transition-all hover:shadow-md ${
+                    selectedAgentId === agent.id ? 'ring-2 ring-mayk-purple' : ''
+                  }`}
+                  onClick={() => setSelectedAgentId(agent.id)}
+                >
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">{agent.type}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">{agent.description}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge variant={agent.complexity === 'básico' ? 'outline' : 
+                              agent.complexity === 'intermediário' ? 'secondary' :
+                              'default'}>
+                        {agent.complexity}
+                      </Badge>
+                      
+                      {agent.setupTime && (
+                        <Badge variant="outline" className="bg-background/50">
+                          {agent.setupTime}
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
             
-            {Object.entries(agentCategories).map(([key, category]) => (
-              <TabsContent key={key} value={key}>
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold mb-4">{category.title}</h3>
-                  <p className="text-muted-foreground mb-6">{category.description}</p>
+            <div className="md:col-span-2">
+              {selectedAgent ? (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-3xl font-bold">{selectedAgent.type}</h2>
+                    <div className="flex gap-2">
+                      <Badge variant={selectedAgent.complexity === 'básico' ? 'outline' : 
+                              selectedAgent.complexity === 'intermediário' ? 'secondary' :
+                              'default'} className="text-sm">
+                        {selectedAgent.complexity}
+                      </Badge>
+                      
+                      {selectedAgent.maintenanceLevel && (
+                        <Badge variant={
+                          selectedAgent.maintenanceLevel === 'baixo' ? 'outline' : 
+                          selectedAgent.maintenanceLevel === 'médio' ? 'secondary' : 
+                          'default'
+                        }>
+                          Manutenção: {selectedAgent.maintenanceLevel}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <p className="text-lg">{selectedAgent.description}</p>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Casos de Uso</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2">
+                        {selectedAgent.examples.map((example, index) => (
+                          <li key={index}>{example}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  {selectedAgent.industries && (
+                    <div className="bg-mayk-purple/10 p-4 rounded-lg">
+                      <h3 className="font-medium mb-2">Indústrias Recomendadas</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedAgent.industries.map((industry, index) => (
+                          <Badge key={index} variant="outline" className="bg-background/50">
+                            {industry}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <h3 className="text-xl font-medium mb-4">Componentes Principais</h3>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {selectedAgent.components.map((component, index) => (
+                        <Badge key={index} className="bg-mayk-purple/20 text-mayk-purple hover:bg-mayk-purple/30">
+                          {component}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <Tabs defaultValue="flowise" className="w-full">
+                    <TabsList className="grid grid-cols-4">
+                      <TabsTrigger value="flowise">Flowise</TabsTrigger>
+                      <TabsTrigger value="n8n" disabled={!selectedAgent.n8nInstructions}>
+                        N8N
+                      </TabsTrigger>
+                      <TabsTrigger value="make" disabled={!selectedAgent.makeInstructions}>
+                        Make
+                      </TabsTrigger>
+                      <TabsTrigger value="zaia" disabled={!selectedAgent.zaiaInstructions}>
+                        Zaia
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="flowise">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Como implementar no Flowise</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {selectedAgent.flowiseInstructions ? (
+                            <div className="whitespace-pre-line">
+                              {selectedAgent.flowiseInstructions}
+                            </div>
+                          ) : (
+                            <p>Instruções de implementação não disponíveis para este agente.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="n8n">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Como implementar no N8N</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {selectedAgent.n8nInstructions ? (
+                            <div className="whitespace-pre-line">
+                              {selectedAgent.n8nInstructions}
+                            </div>
+                          ) : (
+                            <p>Instruções de implementação não disponíveis para N8N.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="make">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Como implementar no Make</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {selectedAgent.makeInstructions ? (
+                            <div className="whitespace-pre-line">
+                              {selectedAgent.makeInstructions}
+                            </div>
+                          ) : (
+                            <p>Instruções de implementação não disponíveis para Make.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    <TabsContent value="zaia">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Como implementar no Zaia</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {selectedAgent.zaiaInstructions ? (
+                            <div className="whitespace-pre-line">
+                              {selectedAgent.zaiaInstructions}
+                            </div>
+                          ) : (
+                            <p>Instruções de implementação não disponíveis para Zaia.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {category.agents.map((agent, index) => (
-                    <Card key={index} className="card-gradient">
-                      <CardHeader>
-                        <CardTitle>{agent.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="mb-4">{agent.description}</p>
-                        
-                        <div className="mb-4">
-                          <h4 className="text-sm font-semibold mb-2">Funcionalidades:</h4>
-                          <ul className="list-disc pl-5 space-y-1 text-sm">
-                            {agent.features.map((feature, i) => (
-                              <li key={i}>{feature}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
-                          <h4 className="text-sm font-semibold mb-1">Implementação:</h4>
-                          <p className="text-sm text-blue-700 dark:text-blue-300">
-                            {agent.implementation}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center p-12 border-2 border-dashed border-border rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-muted-foreground/50 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <h3 className="text-xl font-medium text-muted-foreground">Selecione um tipo de agente</h3>
+                  <p className="text-center text-muted-foreground mt-2">
+                    Escolha uma categoria à esquerda para ver detalhes e instruções de implementação
+                  </p>
                 </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </PageLayout>

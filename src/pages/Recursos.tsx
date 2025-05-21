@@ -1,195 +1,177 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-
-const downloadTemplates = [
-  {
-    title: "Contrato de Prestação de Serviços",
-    description: "Modelo de contrato para serviços de chatbot e automação com IA",
-    format: "DOCX",
-    category: "legal"
-  },
-  {
-    title: "Proposta Comercial",
-    description: "Template de proposta comercial para apresentar a clientes",
-    format: "PPTX",
-    category: "comercial"
-  },
-  {
-    title: "Termo de Uso e Política de Privacidade",
-    description: "Documentos legais para proteger sua agência e clientes",
-    format: "DOCX",
-    category: "legal"
-  },
-  {
-    title: "Checklist de Implementação",
-    description: "Lista de verificação para implementação de novos projetos",
-    format: "PDF",
-    category: "operacional"
-  },
-  {
-    title: "Roteiro de Entrevista com Cliente",
-    description: "Guia para levantar requisitos e entender necessidades",
-    format: "PDF",
-    category: "comercial"
-  },
-  {
-    title: "SLA (Acordo de Nível de Serviço)",
-    description: "Modelo de SLA para definir garantias e suporte",
-    format: "DOCX",
-    category: "legal"
-  },
-  {
-    title: "Planilha de Precificação",
-    description: "Calculadora para determinar preços de serviços",
-    format: "XLSX",
-    category: "comercial"
-  },
-  {
-    title: "Fluxograma de Bot para Clínica",
-    description: "Modelo de fluxo para bots de clínicas médicas e odontológicas",
-    format: "JSON",
-    category: "tecnico"
-  },
-  {
-    title: "Fluxograma de Bot para E-commerce",
-    description: "Modelo de fluxo para bots de lojas virtuais",
-    format: "JSON",
-    category: "tecnico"
-  },
-  {
-    title: "Prompts Otimizados para Bots",
-    description: "Biblioteca de prompts prontos para diferentes casos de uso",
-    format: "TXT",
-    category: "tecnico"
-  },
-  {
-    title: "Planilha de Acompanhamento de Projetos",
-    description: "Template para gestão de projetos de IA",
-    format: "XLSX",
-    category: "operacional"
-  },
-  {
-    title: "Checklist de Segurança",
-    description: "Lista de verificação de segurança para implementações",
-    format: "PDF",
-    category: "operacional"
-  }
-];
-
-const communityLinks = [
-  {
-    name: "Grupo Telegram Mayk IA",
-    url: "#",
-    description: "Comunidade para tirar dúvidas e compartilhar conhecimento",
-    members: "1.500+ membros"
-  },
-  {
-    name: "Discord Flowise",
-    url: "https://discord.gg/flowise",
-    description: "Comunidade oficial dos desenvolvedores do Flowise",
-    members: "5.000+ membros"
-  },
-  {
-    name: "Fórum Z-API",
-    url: "https://forum.z-api.io/",
-    description: "Fórum oficial da Z-API para suporte e dúvidas",
-    members: "3.000+ usuários"
-  },
-  {
-    name: "GitHub LangChain",
-    url: "https://github.com/langchain-ai/langchain",
-    description: "Repositório oficial do LangChain para desenvolvimento avançado",
-    members: "70.000+ stars"
-  }
-];
-
-const referenceLinks = [
-  {
-    name: "Documentação Flowise",
-    url: "https://docs.flowiseai.com/",
-    description: "Documentação oficial do Flowise AI"
-  },
-  {
-    name: "Documentação Z-API",
-    url: "https://developer.z-api.io/",
-    description: "Documentação da API do Z-API para WhatsApp"
-  },
-  {
-    name: "Documentação Twilio",
-    url: "https://www.twilio.com/docs/whatsapp",
-    description: "Guia para API de WhatsApp do Twilio"
-  },
-  {
-    name: "Plataforma OpenAI",
-    url: "https://platform.openai.com/docs",
-    description: "Documentação das APIs da OpenAI"
-  },
-  {
-    name: "Documentação OpenRouter",
-    url: "https://openrouter.ai/docs",
-    description: "Guia para uso da API do OpenRouter"
-  },
-  {
-    name: "Documentação LangChain",
-    url: "https://js.langchain.com/docs/",
-    description: "Documentação do LangChain para JavaScript"
-  },
-  {
-    name: "WhatsApp Business API",
-    url: "https://developers.facebook.com/docs/whatsapp",
-    description: "Documentação oficial da API do WhatsApp Business"
-  },
-  {
-    name: "Documentação N8N",
-    url: "https://docs.n8n.io/",
-    description: "Guia completo da ferramenta de automação N8N"
-  }
-];
-
-const videoTutorials = [
-  {
-    title: "Instalando o Flowise em uma VPS",
-    description: "Tutorial passo a passo para configurar o Flowise em um servidor Linux",
-    duration: "22 minutos",
-    category: "infraestrutura"
-  },
-  {
-    title: "Criando seu primeiro bot no Flowise",
-    description: "Guia básico para criar bots conversacionais com o Flowise",
-    duration: "18 minutos",
-    category: "tecnico"
-  },
-  {
-    title: "Integração do Z-API com Flowise",
-    description: "Como conectar seu bot do Flowise ao WhatsApp usando Z-API",
-    duration: "15 minutos",
-    category: "tecnico"
-  },
-  {
-    title: "Configurando webhook no N8N",
-    description: "Aprenda a criar integrações avançadas usando N8N como middleware",
-    duration: "20 minutos",
-    category: "tecnico"
-  },
-  {
-    title: "Como vender serviços de IA para pequenas empresas",
-    description: "Estratégias de vendas eficientes para conquistar clientes",
-    duration: "25 minutos",
-    category: "comercial"
-  },
-  {
-    title: "Apresentação de proposta para clientes",
-    description: "Como estruturar e apresentar propostas comerciais vencedoras",
-    duration: "17 minutos",
-    category: "comercial"
-  }
-];
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { documentTemplates, DocumentTemplate } from "@/data/documentTemplates";
+import { toast } from "@/components/ui/use-toast";
+import { Download, Search, Tag, FileText, FileImage, FileJson, Table, FileSlides } from "lucide-react";
 
 const Recursos: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState<string>('todos');
+
+  // Filtrar templates com base na busca e categoria selecionada
+  const filteredTemplates = documentTemplates.filter(template => {
+    const matchesSearch = 
+      template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    const matchesCategory = activeCategory === 'todos' || template.category === activeCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleDownload = (template: DocumentTemplate) => {
+    // Em uma aplicação real, aqui faríamos o download do arquivo
+    toast({
+      title: "Download iniciado",
+      description: `${template.title} será baixado em instantes.`,
+    });
+  };
+
+  // Função para obter o ícone baseado no formato do arquivo
+  const getFormatIcon = (format: string) => {
+    switch (format) {
+      case 'DOCX':
+        return <FileText className="h-4 w-4" />;
+      case 'PDF':
+        return <FileText className="h-4 w-4" />;
+      case 'JSON':
+        return <FileJson className="h-4 w-4" />;
+      case 'XLSX':
+        return <Table className="h-4 w-4" />;
+      case 'PPTX':
+        return <FileSlides className="h-4 w-4" />;
+      case 'TXT':
+        return <FileText className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  // Agrupar documentos por categoria para exibição
+  const groupedByCategory: Record<string, DocumentTemplate[]> = {
+    contrato: documentTemplates.filter(t => t.category === 'contrato'),
+    proposta: documentTemplates.filter(t => t.category === 'proposta'),
+    roteiro: documentTemplates.filter(t => t.category === 'roteiro'),
+    termos: documentTemplates.filter(t => t.category === 'termos'),
+    bot: documentTemplates.filter(t => t.category === 'bot'),
+    apresentacao: documentTemplates.filter(t => t.category === 'apresentacao'),
+  };
+
+  const communityLinks = [
+    {
+      name: "Grupo Telegram Mayk IA",
+      url: "#",
+      description: "Comunidade para tirar dúvidas e compartilhar conhecimento",
+      members: "1.500+ membros"
+    },
+    {
+      name: "Discord Flowise",
+      url: "https://discord.gg/flowise",
+      description: "Comunidade oficial dos desenvolvedores do Flowise",
+      members: "5.000+ membros"
+    },
+    {
+      name: "Fórum Z-API",
+      url: "https://forum.z-api.io/",
+      description: "Fórum oficial da Z-API para suporte e dúvidas",
+      members: "3.000+ usuários"
+    },
+    {
+      name: "GitHub LangChain",
+      url: "https://github.com/langchain-ai/langchain",
+      description: "Repositório oficial do LangChain para desenvolvimento avançado",
+      members: "70.000+ stars"
+    }
+  ];
+
+  const referenceLinks = [
+    {
+      name: "Documentação Flowise",
+      url: "https://docs.flowiseai.com/",
+      description: "Documentação oficial do Flowise AI"
+    },
+    {
+      name: "Documentação Z-API",
+      url: "https://developer.z-api.io/",
+      description: "Documentação da API do Z-API para WhatsApp"
+    },
+    {
+      name: "Documentação Twilio",
+      url: "https://www.twilio.com/docs/whatsapp",
+      description: "Guia para API de WhatsApp do Twilio"
+    },
+    {
+      name: "Plataforma OpenAI",
+      url: "https://platform.openai.com/docs",
+      description: "Documentação das APIs da OpenAI"
+    },
+    {
+      name: "Documentação OpenRouter",
+      url: "https://openrouter.ai/docs",
+      description: "Guia para uso da API do OpenRouter"
+    },
+    {
+      name: "Documentação LangChain",
+      url: "https://js.langchain.com/docs/",
+      description: "Documentação do LangChain para JavaScript"
+    },
+    {
+      name: "WhatsApp Business API",
+      url: "https://developers.facebook.com/docs/whatsapp",
+      description: "Documentação oficial da API do WhatsApp Business"
+    },
+    {
+      name: "Documentação N8N",
+      url: "https://docs.n8n.io/",
+      description: "Guia completo da ferramenta de automação N8N"
+    }
+  ];
+
+  const videoTutorials = [
+    {
+      title: "Instalando o Flowise em uma VPS",
+      description: "Tutorial passo a passo para configurar o Flowise em um servidor Linux",
+      duration: "22 minutos",
+      category: "infraestrutura"
+    },
+    {
+      title: "Criando seu primeiro bot no Flowise",
+      description: "Guia básico para criar bots conversacionais com o Flowise",
+      duration: "18 minutos",
+      category: "tecnico"
+    },
+    {
+      title: "Integração do Z-API com Flowise",
+      description: "Como conectar seu bot do Flowise ao WhatsApp usando Z-API",
+      duration: "15 minutos",
+      category: "tecnico"
+    },
+    {
+      title: "Configurando webhook no N8N",
+      description: "Aprenda a criar integrações avançadas usando N8N como middleware",
+      duration: "20 minutos",
+      category: "tecnico"
+    },
+    {
+      title: "Como vender serviços de IA para pequenas empresas",
+      description: "Estratégias de vendas eficientes para conquistar clientes",
+      duration: "25 minutos",
+      category: "comercial"
+    },
+    {
+      title: "Apresentação de proposta para clientes",
+      description: "Como estruturar e apresentar propostas comerciais vencedoras",
+      duration: "17 minutos",
+      category: "comercial"
+    }
+  ];
+
   return (
     <PageLayout 
       title="Recursos e Materiais" 
@@ -197,69 +179,184 @@ const Recursos: React.FC = () => {
     >
       <section className="section-padding">
         <div className="container mx-auto">
-          <div className="mb-12">
+          <div className="mb-8">
             <h2 className="text-3xl font-bold text-center mb-6">Templates e Documentos</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-8">
               Baixe modelos prontos para usar em sua agência, economizando tempo e garantindo qualidade
             </p>
+
+            {/* Barra de pesquisa */}
+            <div className="flex items-center gap-4 max-w-md mx-auto mb-8">
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar templates..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
           </div>
           
           <Tabs defaultValue="todos" className="w-full mb-16">
-            <TabsList className="grid grid-cols-5 mb-8">
-              <TabsTrigger value="todos">Todos</TabsTrigger>
-              <TabsTrigger value="legal">Documentos Legais</TabsTrigger>
-              <TabsTrigger value="comercial">Comercial</TabsTrigger>
-              <TabsTrigger value="operacional">Operacional</TabsTrigger>
-              <TabsTrigger value="tecnico">Técnico</TabsTrigger>
+            <TabsList className="grid grid-cols-7 mb-8">
+              <TabsTrigger value="todos" onClick={() => setActiveCategory('todos')}>Todos</TabsTrigger>
+              <TabsTrigger value="contrato" onClick={() => setActiveCategory('contrato')}>Contratos</TabsTrigger>
+              <TabsTrigger value="proposta" onClick={() => setActiveCategory('proposta')}>Propostas</TabsTrigger>
+              <TabsTrigger value="roteiro" onClick={() => setActiveCategory('roteiro')}>Roteiros</TabsTrigger>
+              <TabsTrigger value="termos" onClick={() => setActiveCategory('termos')}>Termos</TabsTrigger>
+              <TabsTrigger value="bot" onClick={() => setActiveCategory('bot')}>Bots</TabsTrigger>
+              <TabsTrigger value="apresentacao" onClick={() => setActiveCategory('apresentacao')}>Apresentações</TabsTrigger>
             </TabsList>
             
+            {/* Vista "Todos" - Ordenados por popularidade */}
             <TabsContent value="todos">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {downloadTemplates.map((template, index) => (
-                  <Card key={index} className="card-gradient">
-                    <CardHeader>
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-lg">{template.title}</CardTitle>
-                        <span className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-xs rounded-md">
-                          {template.format}
-                        </span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="mb-4 text-sm text-muted-foreground">{template.description}</p>
-                      <Button variant="outline" className="w-full">
-                        Baixar Template
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            {['legal', 'comercial', 'operacional', 'tecnico'].map((category) => (
-              <TabsContent key={category} value={category}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {downloadTemplates
-                    .filter(template => template.category === category)
-                    .map((template, index) => (
-                      <Card key={index} className="card-gradient">
-                        <CardHeader>
-                          <div className="flex justify-between items-center">
-                            <CardTitle className="text-lg">{template.title}</CardTitle>
-                            <span className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-xs rounded-md">
-                              {template.format}
-                            </span>
+              {/* Templates em destaque */}
+              <div className="mb-8">
+                <h3 className="text-xl font-medium mb-4">Templates em Destaque</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {documentTemplates
+                    .filter(template => template.popular)
+                    .map((template) => (
+                      <Card key={template.id} className="card-gradient hover:shadow-md transition-all">
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                {getFormatIcon(template.format)}
+                                {template.title}
+                              </CardTitle>
+                              <Badge variant="outline" className="mt-2">
+                                {template.format}
+                              </Badge>
+                            </div>
                           </div>
                         </CardHeader>
                         <CardContent>
                           <p className="mb-4 text-sm text-muted-foreground">{template.description}</p>
-                          <Button variant="outline" className="w-full">
-                            Baixar Template
+                          <Button 
+                            variant="outline" 
+                            className="w-full" 
+                            onClick={() => handleDownload(template)}
+                          >
+                            <Download className="h-4 w-4 mr-2" /> Baixar Template
                           </Button>
                         </CardContent>
                       </Card>
                     ))}
                 </div>
+              </div>
+
+              {/* Todos os templates agrupados por categoria */}
+              {Object.entries(groupedByCategory).map(([category, templates]) => (
+                templates.length > 0 && (
+                  <div key={category} className="mb-8">
+                    <h3 className="text-xl font-medium mb-4 capitalize">
+                      {category === 'contrato' ? 'Contratos' : 
+                       category === 'proposta' ? 'Propostas' : 
+                       category === 'roteiro' ? 'Roteiros' : 
+                       category === 'termos' ? 'Termos e Políticas' : 
+                       category === 'bot' ? 'Templates de Bots' : 
+                       category === 'apresentacao' ? 'Apresentações' : 
+                       category}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {templates
+                        .filter(template => !template.popular || (searchTerm && template.popular))
+                        .map((template) => (
+                          <Card key={template.id} className="card-gradient hover:shadow-md transition-all">
+                            <CardHeader className="pb-2">
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <CardTitle className="text-lg flex items-center gap-2">
+                                    {getFormatIcon(template.format)}
+                                    {template.title}
+                                  </CardTitle>
+                                  <Badge variant="outline" className="mt-2">
+                                    {template.format}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="mb-4 text-sm text-muted-foreground">{template.description}</p>
+                              <Button 
+                                variant="outline" 
+                                className="w-full" 
+                                onClick={() => handleDownload(template)}
+                              >
+                                <Download className="h-4 w-4 mr-2" /> Baixar Template
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        ))}
+                    </div>
+                  </div>
+                )
+              ))}
+
+              {/* Mensagem quando nenhum resultado for encontrado */}
+              {filteredTemplates.length === 0 && (
+                <div className="text-center py-12">
+                  <Search className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
+                  <h3 className="mt-4 text-xl font-medium">Nenhum template encontrado</h3>
+                  <p className="text-muted-foreground mt-2">
+                    Tente termos diferentes ou remova os filtros
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+            
+            {/* Abas para categorias específicas */}
+            {['contrato', 'proposta', 'roteiro', 'termos', 'bot', 'apresentacao'].map((category) => (
+              <TabsContent key={category} value={category}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {documentTemplates
+                    .filter(template => template.category === category && 
+                      (searchTerm === '' || template.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                       template.description.toLowerCase().includes(searchTerm.toLowerCase())))
+                    .map((template) => (
+                      <Card key={template.id} className="card-gradient hover:shadow-md transition-all">
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                {getFormatIcon(template.format)}
+                                {template.title}
+                              </CardTitle>
+                              <Badge variant="outline" className="mt-2">
+                                {template.format}
+                              </Badge>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="mb-4 text-sm text-muted-foreground">{template.description}</p>
+                          <Button 
+                            variant="outline" 
+                            className="w-full" 
+                            onClick={() => handleDownload(template)}
+                          >
+                            <Download className="h-4 w-4 mr-2" /> Baixar Template
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                </div>
+
+                {/* Mensagem quando nenhum resultado for encontrado na categoria */}
+                {documentTemplates.filter(template => template.category === category && 
+                  (searchTerm === '' || template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                   template.description.toLowerCase().includes(searchTerm.toLowerCase()))).length === 0 && (
+                  <div className="text-center py-12">
+                    <Search className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
+                    <h3 className="mt-4 text-xl font-medium">Nenhum template encontrado</h3>
+                    <p className="text-muted-foreground mt-2">
+                      Tente termos diferentes ou remova os filtros
+                    </p>
+                  </div>
+                )}
               </TabsContent>
             ))}
           </Tabs>

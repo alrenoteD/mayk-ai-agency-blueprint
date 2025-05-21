@@ -195,7 +195,7 @@ const Simuladores: React.FC = () => {
                 
                 return {
                   "Clientes Atuais": inputs.initialClients,
-                  "Clientes em " + inputs.months + " meses": finalClients,
+                  "Clientes em": inputs.months + " meses",
                   "Receita Atual": formatCurrency(currentRevenue),
                   "Receita Projetada": formatCurrency(projectedRevenue),
                   "Multiplicador de Crescimento": `${growthMultiple.toFixed(1)}x`

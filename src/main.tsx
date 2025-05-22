@@ -5,7 +5,8 @@ import App from './App.tsx'
 import './index.css'
 import { ThemeProvider } from 'next-themes';
 
-createRoot(document.getElementById("root")!).render(
+const root = createRoot(document.getElementById("root")!)
+root.render(
   <React.StrictMode>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <App />

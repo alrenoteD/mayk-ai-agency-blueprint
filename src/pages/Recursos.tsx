@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { documentTemplates, DocumentTemplate } from "@/data/documentTemplates";
 import { toast } from "@/components/ui/use-toast";
-import { Download, Search, Tag, FileText, FileImage, FileJson, Table, FileSlides } from "lucide-react";
+import { Download, Search, Tag, FileText, FileImage, FileJson, Table, FileSliders } from "lucide-react";
 
 const Recursos: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,7 +44,7 @@ const Recursos: React.FC = () => {
       case 'XLSX':
         return <Table className="h-4 w-4" />;
       case 'PPTX':
-        return <FileSlides className="h-4 w-4" />;
+        return <FileSliders className="h-4 w-4" />;
       case 'TXT':
         return <FileText className="h-4 w-4" />;
       default:

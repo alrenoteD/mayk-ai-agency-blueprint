@@ -6,6 +6,7 @@ import FacebookAdsTab from '@/components/anunciar/FacebookAdsTab';
 import OfertasTab from '@/components/anunciar/OfertasTab';
 import CriativosTab from '@/components/anunciar/CriativosTab';
 import FormulariosTab from '@/components/anunciar/FormulariosTab';
+import CopyGeneratorTab from '@/components/anunciar/CopyGeneratorTab';
 
 const Anunciar: React.FC = () => {
   return (
@@ -16,11 +17,12 @@ const Anunciar: React.FC = () => {
       <section className="section-padding">
         <div className="container mx-auto">
           <Tabs defaultValue="facebook" className="w-full">
-            <TabsList className="grid grid-cols-4 mb-8">
+            <TabsList className="grid grid-cols-5 mb-8">
               <TabsTrigger value="facebook">Facebook Ads</TabsTrigger>
               <TabsTrigger value="ofertas">Ofertas Irresistíveis</TabsTrigger>
               <TabsTrigger value="criativos">Modelos de Criativos</TabsTrigger>
               <TabsTrigger value="formularios">Formulários de Alta Conversão</TabsTrigger>
+              <TabsTrigger value="copygenerator">Gerador de Copy</TabsTrigger>
             </TabsList>
             
             <TabsContent value="facebook">
@@ -37,6 +39,10 @@ const Anunciar: React.FC = () => {
             
             <TabsContent value="formularios">
               <FormulariosTab />
+            </TabsContent>
+            
+            <TabsContent value="copygenerator">
+              <CopyGeneratorTab />
             </TabsContent>
           </Tabs>
         </div>

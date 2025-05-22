@@ -156,6 +156,110 @@
     --mayk-purple: 200 80% 50%;
     --mayk-teal: 190 80% 60%;
   }
+
+  /* Tema rubi */
+  .theme-ruby {
+    --background: 355 50% 98%;
+    --foreground: 355 50% 15%;
+    --card: 355 50% 98%;
+    --card-foreground: 355 50% 15%;
+    --popover: 355 50% 98%;
+    --popover-foreground: 355 50% 15%;
+    --primary: 355 90% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 355 30% 94%;
+    --secondary-foreground: 355 50% 15%;
+    --muted: 355 30% 94%;
+    --muted-foreground: 355 30% 40%;
+    --accent: 355 30% 94%;
+    --accent-foreground: 355 50% 15%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 355 50% 98%;
+    --border: 355 30% 85%;
+    --input: 355 30% 94%;
+    --ring: 355 90% 60%;
+
+    --mayk-purple: 355 90% 60%;
+    --mayk-teal: 340 80% 70%;
+  }
+
+  /* Tema esmeralda */
+  .theme-emerald {
+    --background: 150 50% 98%;
+    --foreground: 150 50% 15%;
+    --card: 150 50% 98%;
+    --card-foreground: 150 50% 15%;
+    --popover: 150 50% 98%;
+    --popover-foreground: 150 50% 15%;
+    --primary: 150 80% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 30% 94%;
+    --secondary-foreground: 150 50% 15%;
+    --muted: 150 30% 94%;
+    --muted-foreground: 150 30% 40%;
+    --accent: 150 30% 94%;
+    --accent-foreground: 150 50% 15%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 150 50% 98%;
+    --border: 150 30% 85%;
+    --input: 150 30% 94%;
+    --ring: 150 80% 40%;
+
+    --mayk-purple: 150 80% 40%;
+    --mayk-teal: 160 80% 50%;
+  }
+
+  /* Tema noturno */
+  .theme-night {
+    --background: 230 25% 10%;
+    --foreground: 230 25% 90%;
+    --card: 230 25% 13%;
+    --card-foreground: 230 25% 90%;
+    --popover: 230 25% 13%;
+    --popover-foreground: 230 25% 90%;
+    --primary: 230 70% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 25% 20%;
+    --secondary-foreground: 230 25% 90%;
+    --muted: 230 25% 20%;
+    --muted-foreground: 230 25% 70%;
+    --accent: 230 25% 20%;
+    --accent-foreground: 230 25% 90%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 230 25% 90%;
+    --border: 230 25% 25%;
+    --input: 230 25% 20%;
+    --ring: 230 70% 60%;
+
+    --mayk-purple: 230 70% 60%;
+    --mayk-teal: 220 70% 70%;
+  }
+
+  /* Tema pôr do sol */
+  .theme-sunset {
+    --background: 25 50% 98%;
+    --foreground: 25 50% 15%;
+    --card: 25 50% 98%;
+    --card-foreground: 25 50% 15%;
+    --popover: 25 50% 98%;
+    --popover-foreground: 25 50% 15%;
+    --primary: 25 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 25 30% 94%;
+    --secondary-foreground: 25 50% 15%;
+    --muted: 25 30% 94%;
+    --muted-foreground: 25 30% 40%;
+    --accent: 25 30% 94%;
+    --accent-foreground: 25 50% 15%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 25 50% 98%;
+    --border: 25 30% 85%;
+    --input: 25 30% 94%;
+    --ring: 25 90% 55%;
+
+    --mayk-purple: 25 90% 55%;
+    --mayk-teal: 40 90% 50%;
+  }
 }
 
 @layer base {

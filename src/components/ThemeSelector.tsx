@@ -41,6 +41,10 @@ const ThemeSelector: React.FC = () => {
     { id: "purple", name: "Roxo", className: "text-purple-500" },
     { id: "bee", name: "Abelha", className: "text-yellow-500" },
     { id: "ocean", name: "Oceano", className: "text-blue-500" },
+    { id: "ruby", name: "Rubi", className: "text-red-500" },
+    { id: "emerald", name: "Esmeralda", className: "text-emerald-500" },
+    { id: "night", name: "Noturno", className: "text-indigo-500" },
+    { id: "sunset", name: "Pôr do Sol", className: "text-orange-500" },
   ];
 
   const allThemes = [...baseThemes, ...customThemes];

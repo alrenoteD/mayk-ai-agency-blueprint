@@ -10,10 +10,10 @@ const Footer: React.FC = () => {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-mayk-purple to-mayk-teal flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
+                <span className="text-white font-bold text-lg">D</span>
               </div>
               <span className="font-bold text-xl">
-                Mayk <span className="text-transparent bg-clip-text bg-gradient-to-r from-mayk-purple to-mayk-teal">AI Guide</span>
+                Deylith<span className="text-transparent bg-clip-text bg-gradient-to-r from-mayk-purple to-mayk-teal">.dev Hub</span>
               </span>
             </div>
             <p className="text-gray-400 mb-6">
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Mayk AI Guide. Todos os direitos reservados.
+            © {new Date().getFullYear()} Deylith.dev Hub. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <a href="#" className="text-gray-400 hover:text-white transition-colors">

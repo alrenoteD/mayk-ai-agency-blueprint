@@ -14,7 +14,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto p-4 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="mr-6">
-            <span className="text-xl font-bold gradient-text">Mayk IA</span>
+            <span className="text-xl font-bold gradient-text">Deylith.dev Hub</span>
           </Link>
         </div>
         
@@ -23,7 +23,7 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-1">
           <ThemeSelector />
           <Button variant="ghost" asChild>
-            <a href="https://github.com/maykbrito" target="_blank" rel="noreferrer">
+            <a href="https://github.com/deylith" target="_blank" rel="noreferrer">
               <svg
                 className="h-5 w-5"
                 viewBox="0 0 24 24"

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { automationTemplates, toolsOptions, categoriesOptions, difficultyOptions, purposeOptions, AutomationTemplate } from '@/data/automationTemplates';
-import { Clock, DollarSign, TrendingUp, Copy, Star, Filter, Eye, Fire, Zap } from 'lucide-react';
+import { Clock, DollarSign, TrendingUp, Copy, Star, Filter, Eye, Flame, Zap } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import TemplateDetailModal from './TemplateDetailModal';
 
@@ -104,7 +104,7 @@ const TemplateGallery: React.FC = () => {
             )}
             {template.trending && (
               <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-                <Fire className="h-3 w-3 mr-1" />
+                <Flame className="h-3 w-3 mr-1" />
                 Trending
               </Badge>
             )}
@@ -367,7 +367,7 @@ const TemplateGallery: React.FC = () => {
       {trendingTemplates.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Fire className="h-5 w-5 text-orange-600" />
+            <Flame className="h-5 w-5 text-orange-600" />
             <h3 className="text-2xl font-bold">Em Alta</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

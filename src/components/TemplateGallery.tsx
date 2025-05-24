@@ -5,8 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { automationTemplates, toolsOptions, categoriesOptions, difficultyOptions, purposeOptions, AutomationTemplate } from '@/data/automationTemplates';
-import { Clock, DollarSign, TrendingUp, Copy, Star, Filter, Eye, Flame, Zap } from 'lucide-react';
+import { Clock, DollarSign, TrendingUp, Copy, Star, Filter, Eye, Flame, Zap, Info, Download } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TemplateDetailModal from './TemplateDetailModal';
 
 const TemplateGallery: React.FC = () => {
@@ -20,6 +21,8 @@ const TemplateGallery: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<AutomationTemplate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showCostBreakdown, setShowCostBreakdown] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<'usd' | 'brl'>('brl');
 
   const filteredTemplates = useMemo(() => {
     return automationTemplates.filter(template => {
@@ -33,14 +36,15 @@ const TemplateGallery: React.FC = () => {
       const matchesDifficulty = selectedDifficulty === 'all' || template.difficulty === selectedDifficulty;
       const matchesPurpose = selectedPurpose === 'all' || template.purpose === selectedPurpose;
       
+      const priceValue = currency === 'usd' ? template.suggestedPrice.max.usd : template.suggestedPrice.max.brl;
       const matchesPrice = priceRange === 'all' || 
-        (priceRange === 'low' && template.suggestedPrice.max <= 1500) ||
-        (priceRange === 'medium' && template.suggestedPrice.min >= 1000 && template.suggestedPrice.max <= 4000) ||
-        (priceRange === 'high' && template.suggestedPrice.min >= 3000);
+        (priceRange === 'low' && priceValue <= (currency === 'usd' ? 300 : 1500)) ||
+        (priceRange === 'medium' && priceValue >= (currency === 'usd' ? 200 : 1000) && priceValue <= (currency === 'usd' ? 800 : 4000)) ||
+        (priceRange === 'high' && priceValue >= (currency === 'usd' ? 600 : 3000));
 
       return matchesSearch && matchesTools && matchesCategory && matchesDifficulty && matchesPurpose && matchesPrice;
     });
-  }, [searchQuery, selectedTools, selectedCategory, selectedDifficulty, selectedPurpose, priceRange]);
+  }, [searchQuery, selectedTools, selectedCategory, selectedDifficulty, selectedPurpose, priceRange, currency]);
 
   // Separar templates em categorias para exibição
   const popularTemplates = filteredTemplates.filter(t => t.popular);
@@ -65,6 +69,24 @@ const TemplateGallery: React.FC = () => {
     });
   };
 
+  const handleDownloadTemplate = (template: AutomationTemplate, platform: string) => {
+    const content = template.templateContent[platform as keyof typeof template.templateContent];
+    if (content) {
+      const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${template.id}-${platform}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Template baixado!",
+        description: `Template para ${platform} baixado com sucesso.`,
+      });
+    }
+  };
+
   const handleViewTemplate = (template: AutomationTemplate) => {
     setSelectedTemplate(template);
     setIsModalOpen(true);
@@ -86,6 +108,13 @@ const TemplateGallery: React.FC = () => {
     setSelectedDifficulty('all');
     setSelectedPurpose('all');
     setPriceRange('all');
+  };
+
+  const formatCurrency = (amount: number, curr: 'usd' | 'brl') => {
+    if (curr === 'usd') {
+      return `$${amount.toLocaleString()}`;
+    }
+    return `R$ ${amount.toLocaleString()}`;
   };
 
   const TemplateCard = ({ template }: { template: AutomationTemplate }) => (
@@ -145,7 +174,17 @@ const TemplateGallery: React.FC = () => {
           </div>
           <div className="flex items-center gap-1">
             <DollarSign className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs">${template.monthlyCost}/mês</span>
+            <span className="text-xs">
+              {formatCurrency(template.monthlyCost[currency], currency)}/mês
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-0 ml-1"
+              onClick={() => setShowCostBreakdown(template.id)}
+            >
+              <Info className="h-3 w-3 text-muted-foreground hover:text-blue-600" />
+            </Button>
           </div>
         </div>
 
@@ -156,7 +195,7 @@ const TemplateGallery: React.FC = () => {
             <span className="text-xs font-medium text-green-700 dark:text-green-400">Valor sugerido:</span>
           </div>
           <p className="text-sm font-bold text-green-800 dark:text-green-300">
-            R$ {template.suggestedPrice.min.toLocaleString()} - R$ {template.suggestedPrice.max.toLocaleString()}
+            {formatCurrency(template.suggestedPrice.min[currency], currency)} - {formatCurrency(template.suggestedPrice.max[currency], currency)}
           </p>
         </div>
 
@@ -171,6 +210,25 @@ const TemplateGallery: React.FC = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Download Buttons */}
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">Downloads disponíveis:</p>
+          <div className="flex flex-wrap gap-1">
+            {Object.keys(template.templateContent).map(platform => (
+              <Button
+                key={platform}
+                variant="outline"
+                size="sm"
+                className="text-xs h-6 px-2"
+                onClick={() => handleDownloadTemplate(template, platform)}
+              >
+                <Download className="h-3 w-3 mr-1" />
+                {platform.toUpperCase()}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Action Buttons */}
@@ -226,8 +284,24 @@ const TemplateGallery: React.FC = () => {
         </div>
       </div>
 
-      {/* Search and Filter Toggle */}
+      {/* Currency Toggle and Search */}
       <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex gap-2">
+          <Button
+            variant={currency === 'brl' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setCurrency('brl')}
+          >
+            BRL (R$)
+          </Button>
+          <Button
+            variant={currency === 'usd' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setCurrency('usd')}
+          >
+            USD ($)
+          </Button>
+        </div>
         <div className="flex-1 relative">
           <Input
             placeholder="Buscar templates..."
@@ -326,9 +400,15 @@ const TemplateGallery: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas as faixas</SelectItem>
-                  <SelectItem value="low">Até R$ 1.500</SelectItem>
-                  <SelectItem value="medium">R$ 1.000 - R$ 4.000</SelectItem>
-                  <SelectItem value="high">Acima de R$ 3.000</SelectItem>
+                  <SelectItem value="low">
+                    {currency === 'usd' ? 'Até $300' : 'Até R$ 1.500'}
+                  </SelectItem>
+                  <SelectItem value="medium">
+                    {currency === 'usd' ? '$200 - $800' : 'R$ 1.000 - R$ 4.000'}
+                  </SelectItem>
+                  <SelectItem value="high">
+                    {currency === 'usd' ? 'Acima de $600' : 'Acima de R$ 3.000'}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -399,6 +479,46 @@ const TemplateGallery: React.FC = () => {
           </Button>
         </div>
       )}
+
+      {/* Cost Breakdown Modal */}
+      <Dialog open={!!showCostBreakdown} onOpenChange={() => setShowCostBreakdown(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Detalhamento de Custos</DialogTitle>
+            <DialogDescription>
+              Breakdown dos custos mensais para manter o template funcionando
+            </DialogDescription>
+          </DialogHeader>
+          {showCostBreakdown && (
+            <div className="space-y-4">
+              {automationTemplates
+                .find(t => t.id === showCostBreakdown)
+                ?.costBreakdown.map((item, index) => (
+                <div key={index} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
+                  <div>
+                    <p className="font-medium">{item.item}</p>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">
+                      {formatCurrency(item.cost[currency], currency)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              <div className="border-t pt-3 flex justify-between items-center font-bold">
+                <span>Total Mensal:</span>
+                <span>
+                  {formatCurrency(
+                    automationTemplates.find(t => t.id === showCostBreakdown)?.monthlyCost[currency] || 0,
+                    currency
+                  )}
+                </span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Template Detail Modal */}
       <TemplateDetailModal 

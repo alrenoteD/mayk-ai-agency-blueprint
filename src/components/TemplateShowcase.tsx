@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Star, TrendingUp, Clock } from 'lucide-react';
+import { ArrowRight, Star, TrendingUp, Clock, GalleryHorizontal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const TemplateShowcase: React.FC = () => {
@@ -12,7 +12,7 @@ const TemplateShowcase: React.FC = () => {
       name: "Atendente IA para WhatsApp",
       description: "Chatbot inteligente para atendimento 24/7",
       tools: ["n8n", "Flowise", "WhatsApp"],
-      price: "R$ 800 - 2.500",
+      price: "R$ 500 - 2.500",
       difficulty: "Média",
       time: "4-6h",
       popular: true
@@ -21,7 +21,7 @@ const TemplateShowcase: React.FC = () => {
       name: "Agente IA de Agendamento", 
       description: "Sistema automatizado para consultas e reuniões",
       tools: ["n8n", "Google Calendar", "Twilio"],
-      price: "R$ 600 - 2.000",
+      price: "R$ 400 - 2.000",
       difficulty: "Média",
       time: "3-5h",
       popular: false
@@ -30,9 +30,9 @@ const TemplateShowcase: React.FC = () => {
       name: "Micro-SaaS para WhatsApp",
       description: "Plataforma completa para criação de chatbots",
       tools: ["n8n", "Flowise", "Make", "Stripe"],
-      price: "R$ 5.000 - 15.000",
+      price: "R$ 10.000 - 50.000",
       difficulty: "Alta",
-      time: "2-3 sem",
+      time: "1-2 meses",
       popular: true
     }
   ];
@@ -120,15 +120,24 @@ const TemplateShowcase: React.FC = () => {
             <span>✅ Estimativas de ROI precisas</span>
           </div>
           
-          <Link to="/templates">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-              Ver Todos os Templates
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link to="/templates">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                <GalleryHorizontal className="h-5 w-5 mr-2" />
+                Ver Galeria Completa
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </Link>
+            
+            <Link to="/templates">
+              <Button variant="outline" size="lg">
+                Explorar Todos os Templates
+              </Button>
+            </Link>
+          </div>
           
           <p className="text-sm text-muted-foreground">
-            Mais de 50+ templates disponíveis | Valores de R$ 500 a R$ 15.000
+            Mais de 20+ templates disponíveis | Valores de R$ 300 a R$ 50.000
           </p>
         </div>
       </div>

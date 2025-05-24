@@ -1,3 +1,4 @@
+
 export interface AutomationTemplate {
   id: string;
   name: string;
@@ -5,10 +6,27 @@ export interface AutomationTemplate {
   purpose: string;
   creationTime: string;
   difficulty: 'Baixa' | 'Média' | 'Alta';
-  monthlyCost: number;
+  monthlyCost: {
+    usd: number;
+    brl: number;
+  };
+  costBreakdown: {
+    item: string;
+    cost: {
+      usd: number;
+      brl: number;
+    };
+    description: string;
+  }[];
   suggestedPrice: {
-    min: number;
-    max: number;
+    min: {
+      usd: number;
+      brl: number;
+    };
+    max: {
+      usd: number;
+      brl: number;
+    };
   };
   tools: string[];
   category: string;
@@ -27,99 +45,79 @@ export interface AutomationTemplate {
 
 export const automationTemplates: AutomationTemplate[] = [
   {
-    id: "whatsapp-attendant",
-    name: "Atendente IA para WhatsApp",
-    description: "Chatbot inteligente para atendimento ao cliente 24/7 com integração WhatsApp Business API",
+    id: "whatsapp-attendant-simple",
+    name: "Atendente IA Simples para WhatsApp",
+    description: "Chatbot básico para respostas automáticas e redirecionamento para humanos",
     purpose: "Atendimento",
-    creationTime: "4-6 horas",
-    difficulty: "Média",
-    monthlyCost: 25,
-    suggestedPrice: { min: 800, max: 2500 },
-    tools: ["n8n", "Flowise", "WhatsApp Business API", "OpenAI"],
+    creationTime: "2-3 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 15, brl: 75 },
+    costBreakdown: [
+      { item: "WhatsApp Business API", cost: { usd: 10, brl: 50 }, description: "Mensagens enviadas e recebidas" },
+      { item: "Hosting (n8n)", cost: { usd: 5, brl: 25 }, description: "Servidor para automação" }
+    ],
+    suggestedPrice: { min: { usd: 100, brl: 500 }, max: { usd: 300, brl: 1500 } },
+    tools: ["n8n", "WhatsApp Business API"],
     category: "Atendimento ao Cliente",
-    cloneUrl: "#whatsapp-attendant-template",
-    features: ["Respostas automáticas", "Escalação humana", "Histórico de conversas", "Métricas de atendimento"],
-    useCase: "Empresas que recebem muitas mensagens no WhatsApp e precisam de atendimento 24/7",
+    cloneUrl: "#whatsapp-simple-template",
+    features: ["Respostas automáticas", "Horário de funcionamento", "Redirecionamento para humano"],
+    useCase: "Pequenas empresas que precisam de atendimento básico 24/7",
     popular: true,
-    trending: true,
+    trending: false,
     templateContent: {
       n8n: {
-        "meta": {
-          "instanceId": "whatsapp-attendant-v1"
-        },
+        "meta": { "instanceId": "whatsapp-simple-v1" },
         "nodes": [
           {
             "parameters": {
               "httpMethod": "POST",
               "path": "webhook",
-              "responseMode": "responseNode",
-              "options": {}
+              "responseMode": "responseNode"
             },
             "id": "webhook-node",
             "name": "WhatsApp Webhook",
             "type": "n8n-nodes-base.webhook",
             "typeVersion": 1,
             "position": [240, 300]
-          },
-          {
-            "parameters": {
-              "conditions": {
-                "string": [
-                  {
-                    "value1": "={{ $json.entry[0].changes[0].value.messages[0].type }}",
-                    "value2": "text"
-                  }
-                ]
-              }
-            },
-            "id": "if-node",
-            "name": "Is Text Message",
-            "type": "n8n-nodes-base.if",
-            "typeVersion": 1,
-            "position": [460, 300]
           }
-        ],
-        "connections": {
-          "WhatsApp Webhook": {
-            "main": [
-              [
-                {
-                  "node": "Is Text Message",
-                  "type": "main",
-                  "index": 0
-                }
-              ]
-            ]
-          }
-        }
+        ]
+      }
+    }
+  },
+  {
+    id: "whatsapp-attendant-advanced",
+    name: "Atendente IA Avançado para WhatsApp",
+    description: "Sistema completo com IA conversacional, histórico e integração CRM",
+    purpose: "Atendimento",
+    creationTime: "1-2 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 85, brl: 425 },
+    costBreakdown: [
+      { item: "WhatsApp Business API", cost: { usd: 25, brl: 125 }, description: "Alto volume de mensagens" },
+      { item: "OpenAI API", cost: { usd: 30, brl: 150 }, description: "Processamento de linguagem natural" },
+      { item: "Database", cost: { usd: 15, brl: 75 }, description: "Armazenamento de conversas" },
+      { item: "Hosting", cost: { usd: 15, brl: 75 }, description: "Infraestrutura robusta" }
+    ],
+    suggestedPrice: { min: { usd: 500, brl: 2500 }, max: { usd: 1500, brl: 7500 } },
+    tools: ["n8n", "Flowise", "WhatsApp Business API", "OpenAI", "PostgreSQL", "Redis"],
+    category: "Atendimento ao Cliente",
+    cloneUrl: "#whatsapp-advanced-template",
+    features: ["IA conversacional", "Histórico completo", "Integração CRM", "Analytics", "Escalação inteligente"],
+    useCase: "Empresas médias/grandes com alto volume de atendimento",
+    popular: true,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "meta": { "instanceId": "whatsapp-advanced-v1" },
+        "nodes": []
       },
       flowise: {
         "nodes": [
           {
-            "width": 300,
-            "height": 400,
             "id": "chatOpenAI_0",
-            "position": {
-              "x": 1000,
-              "y": 300
-            },
-            "type": "customNode",
             "data": {
-              "id": "chatOpenAI_0",
-              "label": "ChatOpenAI",
-              "version": 1,
-              "name": "chatOpenAI",
-              "type": "ChatOpenAI",
-              "baseClasses": ["ChatOpenAI", "BaseChatModel"],
-              "category": "Chat Models",
-              "inputParams": [
-                {
-                  "label": "Connect Credential",
-                  "name": "credential",
-                  "type": "credential",
-                  "credentialNames": ["openAIApi"]
-                }
-              ]
+              "label": "ChatOpenAI Advanced",
+              "name": "chatOpenAI"
             }
           }
         ]
@@ -127,322 +125,536 @@ export const automationTemplates: AutomationTemplate[] = [
     }
   },
   {
-    id: "ai-scheduling-agent",
-    name: "Agente IA de Agendamento",
-    description: "Sistema automatizado para agendamento de consultas e reuniões com confirmação automática",
+    id: "appointment-scheduler-basic",
+    name: "Agendador Básico",
+    description: "Sistema simples de agendamento com Google Calendar",
     purpose: "Agendamento",
-    creationTime: "3-5 horas",
-    difficulty: "Média",
-    monthlyCost: 20,
-    suggestedPrice: { min: 600, max: 2000 },
-    tools: ["n8n", "Google Calendar", "Twilio", "OpenAI"],
+    creationTime: "3-4 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 8, brl: 40 },
+    costBreakdown: [
+      { item: "Google Calendar API", cost: { usd: 0, brl: 0 }, description: "Gratuito para uso básico" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Servidor básico" },
+      { item: "SMS/Email", cost: { usd: 3, brl: 15 }, description: "Notificações" }
+    ],
+    suggestedPrice: { min: { usd: 80, brl: 400 }, max: { usd: 250, brl: 1250 } },
+    tools: ["n8n", "Google Calendar", "Email"],
     category: "Produtividade",
-    cloneUrl: "#ai-scheduling-template",
-    features: ["Integração com calendários", "SMS/WhatsApp confirmação", "Reagendamento automático", "Lembretes"],
-    useCase: "Clínicas, salões, consultórios e prestadores de serviços",
-    popular: true,
+    cloneUrl: "#scheduler-basic-template",
+    features: ["Agendamento simples", "Confirmação por email", "Lembretes"],
+    useCase: "Profissionais autônomos e pequenos consultórios",
+    popular: false,
     trending: false,
     templateContent: {
       n8n: {
-        "meta": {
-          "instanceId": "scheduling-agent-v1"
-        },
         "nodes": [
           {
             "parameters": {
               "calendar": "primary",
-              "operation": "create",
-              "summary": "={{ $json.appointmentTitle }}",
-              "start": "={{ $json.startTime }}",
-              "end": "={{ $json.endTime }}"
+              "operation": "create"
             },
-            "id": "google-calendar",
             "name": "Google Calendar",
-            "type": "n8n-nodes-base.googleCalendar",
-            "typeVersion": 1,
-            "position": [800, 300]
+            "type": "n8n-nodes-base.googleCalendar"
           }
         ]
       }
     }
   },
   {
-    id: "recruitment-ai",
-    name: "Agente IA de Recrutamento",
-    description: "Sistema para triagem automática de candidatos e agendamento de entrevistas",
-    purpose: "Recrutamento",
-    creationTime: "6-8 horas",
+    id: "appointment-scheduler-ai",
+    name: "Agendador IA Inteligente",
+    description: "Sistema avançado com IA para otimização de horários e reagendamentos automáticos",
+    purpose: "Agendamento",
+    creationTime: "1-2 semanas",
     difficulty: "Alta",
-    monthlyCost: 35,
-    suggestedPrice: { min: 1200, max: 4000 },
-    tools: ["n8n", "Flowise", "Make", "LinkedIn API", "OpenAI"],
-    category: "Recursos Humanos",
-    cloneUrl: "#recruitment-ai-template",
-    features: ["Análise de CVs", "Triagem automática", "Agendamento de entrevistas", "Score de candidatos"],
-    useCase: "Empresas de RH e departamentos de recursos humanos",
-    popular: false,
-    trending: true,
-    templateContent: {
-      make: {
-        "name": "Recruitment AI Pipeline",
-        "flow": [
-          {
-            "id": 1,
-            "module": "email:ActionWatchEmails",
-            "version": 2,
-            "parameters": {
-              "folder": "INBOX",
-              "criteria": "subject:CV OR subject:Resume"
-            }
-          }
-        ]
-      },
-      flowise: {
-        "nodes": [
-          {
-            "id": "documentLoader_0",
-            "data": {
-              "label": "PDF File Loader",
-              "name": "pdfFile"
-            }
-          }
-        ]
-      }
-    }
-  },
-  {
-    id: "order-tracking-ai",
-    name: "Rastreamento de Pedidos via IA",
-    description: "Bot que fornece atualizações automáticas sobre status de pedidos via WhatsApp/SMS",
-    purpose: "Vendas",
-    creationTime: "3-4 horas",
-    difficulty: "Baixa",
-    monthlyCost: 15,
-    suggestedPrice: { min: 500, max: 1500 },
-    tools: ["n8n", "Correios API", "WhatsApp", "SMS"],
-    category: "E-commerce",
-    cloneUrl: "#order-tracking-template",
-    features: ["Rastreamento em tempo real", "Notificações automáticas", "Múltiplos transportadores", "Interface amigável"],
-    useCase: "Lojas online e e-commerce que precisam manter clientes informados",
-    popular: false,
-    trending: false,
-    templateContent: {
-      n8n: {
-        "nodes": [
-          {
-            "parameters": {
-              "url": "https://api.correios.com.br/rastreio/{{ $json.trackingCode }}",
-              "options": {
-                "headers": {
-                  "Authorization": "Bearer {{ $credentials.correiosApi.token }}"
-                }
-              }
-            },
-            "name": "Correios API",
-            "type": "n8n-nodes-base.httpRequest"
-          }
-        ]
-      }
-    }
-  },
-  {
-    id: "micro-saas-whatsapp",
-    name: "Micro-SaaS para WhatsApp",
-    description: "Plataforma completa para criação de chatbots personalizados para empresas",
-    purpose: "Vendas",
-    creationTime: "2-3 semanas",
-    difficulty: "Alta",
-    monthlyCost: 50,
-    suggestedPrice: { min: 5000, max: 15000 },
-    tools: ["n8n", "Flowise", "Make", "Stripe", "Database"],
-    category: "SaaS",
-    cloneUrl: "#micro-saas-template",
-    features: ["Multi-tenant", "Billing automático", "Dashboard analytics", "White-label"],
-    useCase: "Agências que querem criar um produto SaaS próprio",
+    monthlyCost: { usd: 45, brl: 225 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 20, brl: 100 }, description: "Processamento inteligente" },
+      { item: "WhatsApp/SMS", cost: { usd: 15, brl: 75 }, description: "Comunicação multi-canal" },
+      { item: "Database", cost: { usd: 5, brl: 25 }, description: "Dados de clientes" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Infraestrutura" }
+    ],
+    suggestedPrice: { min: { usd: 400, brl: 2000 }, max: { usd: 1200, brl: 6000 } },
+    tools: ["n8n", "Flowise", "Google Calendar", "OpenAI", "WhatsApp", "Twilio"],
+    category: "Produtividade",
+    cloneUrl: "#scheduler-ai-template",
+    features: ["IA para otimização", "Reagendamento automático", "Multi-canal", "Analytics preditivos"],
+    useCase: "Clínicas, salões e empresas com agenda complexa",
     popular: true,
     trending: true,
     templateContent: {
       n8n: {
-        "meta": {
-          "instanceId": "micro-saas-v1"
-        }
+        "nodes": []
+      },
+      flowise: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "lead-qualifier-basic",
+    name: "Qualificador de Leads Básico",
+    description: "Sistema simples para captura e qualificação inicial de leads",
+    purpose: "Vendas",
+    creationTime: "2-3 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 12, brl: 60 },
+    costBreakdown: [
+      { item: "Webhooks/Forms", cost: { usd: 0, brl: 0 }, description: "Captura de dados" },
+      { item: "Email Marketing", cost: { usd: 7, brl: 35 }, description: "Envio automatizado" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 60, brl: 300 }, max: { usd: 200, brl: 1000 } },
+    tools: ["n8n", "Email", "Webhook"],
+    category: "Vendas",
+    cloneUrl: "#lead-qualifier-basic",
+    features: ["Formulários automáticos", "Pontuação simples", "Email follow-up"],
+    useCase: "Pequenas empresas e freelancers",
+    popular: false,
+    trending: false,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "lead-qualifier-ai",
+    name: "Qualificador de Leads IA Avançado",
+    description: "Sistema inteligente com scoring automático e conversação natural",
+    purpose: "Vendas",
+    creationTime: "1-2 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 65, brl: 325 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 25, brl: 125 }, description: "Análise inteligente de leads" },
+      { item: "WhatsApp/Chat", cost: { usd: 20, brl: 100 }, description: "Conversação automática" },
+      { item: "CRM Integration", cost: { usd: 10, brl: 50 }, description: "HubSpot/Pipedrive" },
+      { item: "Database", cost: { usd: 5, brl: 25 }, description: "Armazenamento" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Infraestrutura" }
+    ],
+    suggestedPrice: { min: { usd: 600, brl: 3000 }, max: { usd: 2000, brl: 10000 } },
+    tools: ["n8n", "Flowise", "OpenAI", "HubSpot", "WhatsApp", "Make"],
+    category: "Vendas",
+    cloneUrl: "#lead-qualifier-ai",
+    features: ["Scoring inteligente", "Conversação natural", "Integração CRM", "Analytics avançados"],
+    useCase: "Agências e empresas B2B com processo de vendas complexo",
+    popular: true,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
       },
       flowise: {
         "nodes": []
       },
       make: {
-        "name": "SaaS Multi-tenant Flow"
+        "name": "AI Lead Qualification"
       }
     }
   },
   {
-    id: "social-media-manager",
-    name: "Gerenciador de Redes Sociais IA",
-    description: "Automatiza posts, responde comentários e gera conteúdo para múltiplas redes sociais",
+    id: "social-media-basic",
+    name: "Gerenciador Social Básico",
+    description: "Postagem automática simples em redes sociais",
     purpose: "Marketing",
-    creationTime: "5-7 horas",
-    difficulty: "Média",
-    monthlyCost: 40,
-    suggestedPrice: { min: 1200, max: 3500 },
-    tools: ["Make", "OpenAI", "Facebook API", "Instagram API", "Buffer"],
+    creationTime: "2-4 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 18, brl: 90 },
+    costBreakdown: [
+      { item: "Buffer/Hootsuite", cost: { usd: 15, brl: 75 }, description: "Agendamento de posts" },
+      { item: "Hosting", cost: { usd: 3, brl: 15 }, description: "Automação" }
+    ],
+    suggestedPrice: { min: { usd: 100, brl: 500 }, max: { usd: 400, brl: 2000 } },
+    tools: ["Make", "Buffer", "Facebook API", "Instagram API"],
     category: "Marketing Digital",
-    cloneUrl: "#social-media-manager",
-    features: ["Posts automáticos", "Resposta a comentários", "Análise de engajamento", "Geração de conteúdo"],
-    useCase: "Agências de marketing e influenciadores digitais",
+    cloneUrl: "#social-basic",
+    features: ["Agendamento automático", "Multi-plataforma", "Relatórios básicos"],
+    useCase: "Pequenas empresas e influenciadores iniciantes",
+    popular: false,
+    trending: false,
+    templateContent: {
+      make: {
+        "name": "Basic Social Media Automation"
+      }
+    }
+  },
+  {
+    id: "social-media-ai",
+    name: "Gerenciador Social IA Completo",
+    description: "Sistema completo com geração de conteúdo IA e análise de engajamento",
+    purpose: "Marketing",
+    creationTime: "2-3 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 95, brl: 475 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 40, brl: 200 }, description: "Geração de conteúdo" },
+      { item: "Social APIs", cost: { usd: 25, brl: 125 }, description: "Facebook, Instagram, LinkedIn" },
+      { item: "Image Generation", cost: { usd: 15, brl: 75 }, description: "DALL-E, Midjourney" },
+      { item: "Analytics Tools", cost: { usd: 10, brl: 50 }, description: "Métricas avançadas" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Infraestrutura" }
+    ],
+    suggestedPrice: { min: { usd: 800, brl: 4000 }, max: { usd: 3000, brl: 15000 } },
+    tools: ["Make", "n8n", "OpenAI", "DALL-E", "Facebook API", "Instagram API", "LinkedIn API"],
+    category: "Marketing Digital",
+    cloneUrl: "#social-ai-complete",
+    features: ["Geração automática de conteúdo", "Criação de imagens", "Análise de sentimento", "Otimização de horários"],
+    useCase: "Agências de marketing e grandes empresas",
     popular: true,
     trending: true,
     templateContent: {
       make: {
-        "name": "Social Media Automation",
-        "flow": [
-          {
-            "id": 1,
-            "module": "openai:ActionCreateChatCompletion",
-            "parameters": {
-              "model": "gpt-4",
-              "messages": [
-                {
-                  "role": "system",
-                  "content": "Você é um especialista em marketing digital. Crie posts engajantes para redes sociais."
-                }
-              ]
-            }
-          }
-        ]
+        "name": "AI Social Media Manager"
+      },
+      n8n: {
+        "nodes": []
       }
     }
   },
   {
-    id: "voice-assistant-calls",
-    name: "Assistente IA para Chamadas",
-    description: "Bot que faz e recebe chamadas telefônicas com IA conversacional",
+    id: "voice-assistant-basic",
+    name: "Assistente de Voz Básico",
+    description: "Bot simples para atendimento telefônico com menu de opções",
     purpose: "Atendimento",
-    creationTime: "8-10 horas",
-    difficulty: "Alta",
-    monthlyCost: 60,
-    suggestedPrice: { min: 2000, max: 6000 },
-    tools: ["n8n", "Twilio", "OpenAI", "Speech-to-Text", "Text-to-Speech"],
-    category: "Atendimento ao Cliente",
-    cloneUrl: "#voice-assistant-calls",
-    features: ["Reconhecimento de voz", "Síntese de fala", "Transferência para humanos", "Gravação de chamadas"],
-    useCase: "Call centers e empresas com alto volume de chamadas",
-    popular: true,
-    trending: true,
-    templateContent: {
-      n8n: {
-        "nodes": [
-          {
-            "parameters": {
-              "operation": "makeCall",
-              "to": "{{ $json.phoneNumber }}",
-              "from": "{{ $credentials.twilio.phoneNumber }}",
-              "twiml": "{{ $json.twimlResponse }}"
-            },
-            "name": "Twilio Voice",
-            "type": "n8n-nodes-base.twilio"
-          }
-        ]
-      }
-    }
-  },
-  {
-    id: "inventory-manager-ai",
-    name: "Gerenciador de Estoque IA",
-    description: "Sistema inteligente para controle de estoque com previsão de demanda",
-    purpose: "Operacional",
-    creationTime: "6-8 horas",
-    difficulty: "Média",
-    monthlyCost: 30,
-    suggestedPrice: { min: 1500, max: 4000 },
-    tools: ["n8n", "Google Sheets", "OpenAI", "Email", "Slack"],
-    category: "Operações",
-    cloneUrl: "#inventory-manager",
-    features: ["Previsão de demanda", "Alertas de estoque baixo", "Relatórios automáticos", "Integração ERP"],
-    useCase: "Lojas físicas e e-commerce com gestão de estoque",
-    popular: false,
-    trending: false,
-    templateContent: {
-      n8n: {
-        "nodes": [
-          {
-            "parameters": {
-              "operation": "read",
-              "sheetId": "{{ $json.spreadsheetId }}",
-              "range": "A:Z"
-            },
-            "name": "Google Sheets",
-            "type": "n8n-nodes-base.googleSheets"
-          }
-        ]
-      }
-    }
-  },
-  {
-    id: "financial-advisor-ai",
-    name: "Consultor Financeiro IA",
-    description: "Bot que analisa gastos e oferece conselhos financeiros personalizados",
-    purpose: "Consultoria",
-    creationTime: "7-9 horas",
-    difficulty: "Alta",
-    monthlyCost: 45,
-    suggestedPrice: { min: 2500, max: 7000 },
-    tools: ["Flowise", "OpenAI", "Plaid API", "n8n", "WhatsApp"],
-    category: "Serviços Financeiros",
-    cloneUrl: "#financial-advisor",
-    features: ["Análise de gastos", "Planejamento financeiro", "Alertas de orçamento", "Relatórios mensais"],
-    useCase: "Bancos, fintechs e consultores financeiros",
-    popular: false,
-    trending: true,
-    templateContent: {
-      flowise: {
-        "nodes": [
-          {
-            "id": "chatOpenAI_0",
-            "data": {
-              "label": "Financial Advisor AI",
-              "name": "chatOpenAI",
-              "instructions": "Você é um consultor financeiro especializado em análise de gastos e planejamento financeiro."
-            }
-          }
-        ]
-      }
-    }
-  },
-  {
-    id: "real-estate-lead-qualifier",
-    name: "Qualificador de Leads Imobiliários",
-    description: "Sistema que qualifica leads imobiliários e agenda visitas automaticamente",
-    purpose: "Vendas",
     creationTime: "4-6 horas",
     difficulty: "Média",
-    monthlyCost: 25,
-    suggestedPrice: { min: 1000, max: 3000 },
-    tools: ["n8n", "WhatsApp", "Google Calendar", "CRM", "OpenAI"],
-    category: "Imobiliário",
-    cloneUrl: "#real-estate-qualifier",
-    features: ["Qualificação de leads", "Agendamento de visitas", "Integração CRM", "Follow-up automático"],
-    useCase: "Imobiliárias e corretores autônomos",
-    popular: true,
+    monthlyCost: { usd: 35, brl: 175 },
+    costBreakdown: [
+      { item: "Twilio Voice", cost: { usd: 25, brl: 125 }, description: "Chamadas telefônicas" },
+      { item: "Text-to-Speech", cost: { usd: 5, brl: 25 }, description: "Síntese de voz" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 200, brl: 1000 }, max: { usd: 600, brl: 3000 } },
+    tools: ["n8n", "Twilio", "Text-to-Speech"],
+    category: "Atendimento ao Cliente",
+    cloneUrl: "#voice-basic",
+    features: ["Menu por voz", "Redirecionamento", "Gravação de chamadas"],
+    useCase: "Pequenas empresas com atendimento telefônico",
+    popular: false,
     trending: false,
     templateContent: {
       n8n: {
-        "nodes": [
-          {
-            "parameters": {
-              "conditions": {
-                "number": [
-                  {
-                    "value1": "={{ $json.budget }}",
-                    "operation": "larger",
-                    "value2": 100000
-                  }
-                ]
-              }
-            },
-            "name": "Qualify Lead",
-            "type": "n8n-nodes-base.if"
-          }
-        ]
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "voice-assistant-ai",
+    name: "Assistente de Voz IA Conversacional",
+    description: "Sistema avançado com IA conversacional e reconhecimento de voz",
+    purpose: "Atendimento",
+    creationTime: "2-3 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 120, brl: 600 },
+    costBreakdown: [
+      { item: "Twilio Voice", cost: { usd: 50, brl: 250 }, description: "Alto volume de chamadas" },
+      { item: "OpenAI API", cost: { usd: 35, brl: 175 }, description: "Processamento conversacional" },
+      { item: "Speech-to-Text", cost: { usd: 20, brl: 100 }, description: "Reconhecimento de voz" },
+      { item: "Text-to-Speech", cost: { usd: 10, brl: 50 }, description: "Síntese natural" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Infraestrutura" }
+    ],
+    suggestedPrice: { min: { usd: 1000, brl: 5000 }, max: { usd: 4000, brl: 20000 } },
+    tools: ["n8n", "Flowise", "Twilio", "OpenAI", "Speech-to-Text", "Text-to-Speech"],
+    category: "Atendimento ao Cliente",
+    cloneUrl: "#voice-ai",
+    features: ["Conversação natural", "Reconhecimento de contexto", "Transferência inteligente", "Analytics de chamadas"],
+    useCase: "Call centers e empresas com atendimento complexo",
+    popular: true,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      },
+      flowise: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "inventory-tracker-basic",
+    name: "Controle de Estoque Básico",
+    description: "Sistema simples para monitoramento de estoque com alertas",
+    purpose: "Operacional",
+    creationTime: "3-5 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 10, brl: 50 },
+    costBreakdown: [
+      { item: "Google Sheets API", cost: { usd: 0, brl: 0 }, description: "Armazenamento gratuito" },
+      { item: "Email/SMS", cost: { usd: 5, brl: 25 }, description: "Alertas" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Automação" }
+    ],
+    suggestedPrice: { min: { usd: 80, brl: 400 }, max: { usd: 300, brl: 1500 } },
+    tools: ["n8n", "Google Sheets", "Email"],
+    category: "Operações",
+    cloneUrl: "#inventory-basic",
+    features: ["Alertas de estoque baixo", "Relatórios semanais", "Integração planilhas"],
+    useCase: "Pequenas lojas e estoques simples",
+    popular: false,
+    trending: false,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "inventory-tracker-ai",
+    name: "Gerenciador de Estoque IA Preditivo",
+    description: "Sistema inteligente com previsão de demanda e otimização automática",
+    purpose: "Operacional",
+    creationTime: "2-3 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 85, brl: 425 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 30, brl: 150 }, description: "Análise preditiva" },
+      { item: "Database", cost: { usd: 25, brl: 125 }, description: "Histórico detalhado" },
+      { item: "ERP Integration", cost: { usd: 20, brl: 100 }, description: "Sistemas empresariais" },
+      { item: "Hosting", cost: { usd: 10, brl: 50 }, description: "Infraestrutura robusta" }
+    ],
+    suggestedPrice: { min: { usd: 1000, brl: 5000 }, max: { usd: 5000, brl: 25000 } },
+    tools: ["n8n", "Flowise", "OpenAI", "PostgreSQL", "ERP APIs", "Power BI"],
+    category: "Operações",
+    cloneUrl: "#inventory-ai",
+    features: ["Previsão de demanda", "Otimização automática", "Integração ERP", "Dashboards inteligentes"],
+    useCase: "Empresas médias/grandes com estoque complexo",
+    popular: false,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      },
+      flowise: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "email-marketing-basic",
+    name: "Email Marketing Básico",
+    description: "Automação simples de campanhas de email",
+    purpose: "Marketing",
+    creationTime: "2-3 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 12, brl: 60 },
+    costBreakdown: [
+      { item: "Mailchimp/SendGrid", cost: { usd: 10, brl: 50 }, description: "Envio de emails" },
+      { item: "Hosting", cost: { usd: 2, brl: 10 }, description: "Automação" }
+    ],
+    suggestedPrice: { min: { usd: 60, brl: 300 }, max: { usd: 250, brl: 1250 } },
+    tools: ["Make", "Mailchimp", "Webhook"],
+    category: "Marketing Digital",
+    cloneUrl: "#email-basic",
+    features: ["Campanhas automáticas", "Segmentação básica", "Relatórios"],
+    useCase: "Pequenas empresas e startups",
+    popular: false,
+    trending: false,
+    templateContent: {
+      make: {
+        "name": "Basic Email Marketing"
+      }
+    }
+  },
+  {
+    id: "email-marketing-ai",
+    name: "Email Marketing IA Personalizado",
+    description: "Sistema avançado com personalização IA e otimização automática",
+    purpose: "Marketing",
+    creationTime: "1-2 semanas",
+    difficulty: "Alta",
+    monthlyCost: { usd: 75, brl: 375 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 30, brl: 150 }, description: "Personalização de conteúdo" },
+      { item: "Email Platform", cost: { usd: 25, brl: 125 }, description: "Envio em massa" },
+      { item: "Analytics", cost: { usd: 15, brl: 75 }, description: "Análise comportamental" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 500, brl: 2500 }, max: { usd: 2000, brl: 10000 } },
+    tools: ["Make", "n8n", "OpenAI", "Mailchimp", "Google Analytics"],
+    category: "Marketing Digital",
+    cloneUrl: "#email-ai",
+    features: ["Personalização IA", "A/B testing automático", "Otimização de horários", "Segmentação inteligente"],
+    useCase: "E-commerce e empresas com base grande de clientes",
+    popular: true,
+    trending: true,
+    templateContent: {
+      make: {
+        "name": "AI Email Marketing"
+      },
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "financial-assistant-basic",
+    name: "Assistente Financeiro Simples",
+    description: "Bot básico para consultas de saldo e extrato",
+    purpose: "Financeiro",
+    creationTime: "4-6 horas",
+    difficulty: "Média",
+    monthlyCost: { usd: 25, brl: 125 },
+    costBreakdown: [
+      { item: "Banking APIs", cost: { usd: 15, brl: 75 }, description: "Integração bancária" },
+      { item: "WhatsApp", cost: { usd: 5, brl: 25 }, description: "Interface de comunicação" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Segurança" }
+    ],
+    suggestedPrice: { min: { usd: 200, brl: 1000 }, max: { usd: 800, brl: 4000 } },
+    tools: ["n8n", "Banking API", "WhatsApp"],
+    category: "Serviços Financeiros",
+    cloneUrl: "#financial-basic",
+    features: ["Consulta de saldo", "Extrato por período", "Alertas de movimentação"],
+    useCase: "Bancos digitais e fintechs",
+    popular: false,
+    trending: false,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "recruitment-basic",
+    name: "Recrutamento Básico",
+    description: "Sistema simples para triagem inicial de candidatos",
+    purpose: "Recrutamento",
+    creationTime: "3-5 horas",
+    difficulty: "Baixa",
+    monthlyCost: { usd: 15, brl: 75 },
+    costBreakdown: [
+      { item: "Email/Forms", cost: { usd: 5, brl: 25 }, description: "Coleta de dados" },
+      { item: "File Storage", cost: { usd: 5, brl: 25 }, description: "Armazenamento de CVs" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 100, brl: 500 }, max: { usd: 400, brl: 2000 } },
+    tools: ["n8n", "Email", "Google Drive"],
+    category: "Recursos Humanos",
+    cloneUrl: "#recruitment-basic",
+    features: ["Triagem por palavras-chave", "Agendamento automático", "Notificações"],
+    useCase: "Pequenas empresas e consultores de RH",
+    popular: false,
+    trending: false,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "content-creator-ai",
+    name: "Criador de Conteúdo IA",
+    description: "Sistema para geração automática de conteúdo para blogs e redes sociais",
+    purpose: "Marketing",
+    creationTime: "1-2 semanas",
+    difficulty: "Média",
+    monthlyCost: { usd: 55, brl: 275 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 40, brl: 200 }, description: "Geração de texto" },
+      { item: "Image APIs", cost: { usd: 10, brl: 50 }, description: "Geração de imagens" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 400, brl: 2000 }, max: { usd: 1500, brl: 7500 } },
+    tools: ["n8n", "OpenAI", "DALL-E", "WordPress API"],
+    category: "Marketing Digital",
+    cloneUrl: "#content-creator",
+    features: ["Geração automática de artigos", "Criação de imagens", "Publicação automática", "SEO otimizado"],
+    useCase: "Blogs, agências de conteúdo e marketing",
+    popular: true,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "order-tracking-advanced",
+    name: "Rastreamento Avançado de Pedidos",
+    description: "Sistema completo com múltiplas transportadoras e notificações inteligentes",
+    purpose: "E-commerce",
+    creationTime: "1 semana",
+    difficulty: "Média",
+    monthlyCost: { usd: 35, brl: 175 },
+    costBreakdown: [
+      { item: "Shipping APIs", cost: { usd: 20, brl: 100 }, description: "Múltiplas transportadoras" },
+      { item: "WhatsApp/SMS", cost: { usd: 10, brl: 50 }, description: "Notificações" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 300, brl: 1500 }, max: { usd: 1000, brl: 5000 } },
+    tools: ["n8n", "Correios API", "FedEx API", "WhatsApp", "SMS"],
+    category: "E-commerce",
+    cloneUrl: "#order-tracking-advanced",
+    features: ["Múltiplas transportadoras", "Notificações inteligentes", "Previsão de entrega", "Mapa de rastreamento"],
+    useCase: "E-commerce médio/grande porte",
+    popular: false,
+    trending: false,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "survey-analyzer-ai",
+    name: "Analisador de Pesquisas IA",
+    description: "Sistema para criação, distribuição e análise inteligente de pesquisas",
+    purpose: "Pesquisa",
+    creationTime: "1-2 semanas",
+    difficulty: "Média",
+    monthlyCost: { usd: 45, brl: 225 },
+    costBreakdown: [
+      { item: "OpenAI API", cost: { usd: 25, brl: 125 }, description: "Análise de sentimentos" },
+      { item: "Survey Platform", cost: { usd: 15, brl: 75 }, description: "Criação de pesquisas" },
+      { item: "Hosting", cost: { usd: 5, brl: 25 }, description: "Processamento" }
+    ],
+    suggestedPrice: { min: { usd: 400, brl: 2000 }, max: { usd: 1200, brl: 6000 } },
+    tools: ["n8n", "Flowise", "Typeform", "OpenAI", "Power BI"],
+    category: "Pesquisa e Análise",
+    cloneUrl: "#survey-analyzer",
+    features: ["Criação automática", "Análise de sentimentos", "Relatórios inteligentes", "Insights automáticos"],
+    useCase: "Empresas de pesquisa e departamentos de marketing",
+    popular: false,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      },
+      flowise: {
+        "nodes": []
+      }
+    }
+  },
+  {
+    id: "micro-saas-complete",
+    name: "Micro-SaaS Completo Multi-Tenant",
+    description: "Plataforma completa para criação de SaaS com billing e dashboard",
+    purpose: "SaaS",
+    creationTime: "1-2 meses",
+    difficulty: "Alta",
+    monthlyCost: { usd: 150, brl: 750 },
+    costBreakdown: [
+      { item: "Database", cost: { usd: 50, brl: 250 }, description: "PostgreSQL robusto" },
+      { item: "Stripe", cost: { usd: 30, brl: 150 }, description: "Processamento de pagamentos" },
+      { item: "Hosting", cost: { usd: 40, brl: 200 }, description: "Infraestrutura escalável" },
+      { item: "CDN", cost: { usd: 15, brl: 75 }, description: "Entrega de conteúdo" },
+      { item: "Monitoring", cost: { usd: 15, brl: 75 }, description: "Monitoramento e logs" }
+    ],
+    suggestedPrice: { min: { usd: 2000, brl: 10000 }, max: { usd: 10000, brl: 50000 } },
+    tools: ["n8n", "Flowise", "Make", "Stripe", "PostgreSQL", "React", "Docker"],
+    category: "SaaS",
+    cloneUrl: "#micro-saas-complete",
+    features: ["Multi-tenant", "Billing automático", "Dashboard completo", "White-label", "API completa"],
+    useCase: "Agências que querem criar produtos SaaS próprios",
+    popular: true,
+    trending: true,
+    templateContent: {
+      n8n: {
+        "nodes": []
+      },
+      flowise: {
+        "nodes": []
+      },
+      make: {
+        "name": "Complete SaaS Platform"
       }
     }
   }
@@ -469,7 +681,16 @@ export const toolsOptions = [
   "Plaid API",
   "Facebook API",
   "Instagram API",
-  "Slack"
+  "Slack",
+  "PostgreSQL",
+  "Redis",
+  "DALL-E",
+  "Mailchimp",
+  "SendGrid",
+  "Typeform",
+  "Power BI",
+  "Docker",
+  "React"
 ];
 
 export const categoriesOptions = [
@@ -483,7 +704,8 @@ export const categoriesOptions = [
   "Financeiro",
   "Operações",
   "Serviços Financeiros",
-  "Imobiliário"
+  "Imobiliário",
+  "Pesquisa e Análise"
 ];
 
 export const difficultyOptions = ["Baixa", "Média", "Alta"];
@@ -496,5 +718,8 @@ export const purposeOptions = [
   "Marketing",
   "Financeiro",
   "Operacional",
-  "Consultoria"
+  "Consultoria",
+  "E-commerce",
+  "SaaS",
+  "Pesquisa"
 ];

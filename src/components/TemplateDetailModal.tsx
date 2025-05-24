@@ -55,6 +55,13 @@ const TemplateDetailModal: React.FC<TemplateDetailModalProps> = ({ template, isO
     }
   };
 
+  const formatCurrency = (amount: number, currency: 'usd' | 'brl') => {
+    if (currency === 'usd') {
+      return `$${amount.toLocaleString()}`;
+    }
+    return `R$ ${amount.toLocaleString()}`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -99,7 +106,9 @@ const TemplateDetailModal: React.FC<TemplateDetailModalProps> = ({ template, isO
                 <DollarSign className="h-4 w-4 text-purple-600" />
                 <span className="text-sm font-medium text-purple-700 dark:text-purple-400">Custo/mês</span>
               </div>
-              <p className="text-lg font-bold text-purple-800 dark:text-purple-300">${template.monthlyCost}</p>
+              <p className="text-lg font-bold text-purple-800 dark:text-purple-300">
+                {formatCurrency(template.monthlyCost.usd, 'usd')} / {formatCurrency(template.monthlyCost.brl, 'brl')}
+              </p>
             </div>
             
             <div className="bg-green-50 dark:bg-green-950/30 p-4 rounded-lg">
@@ -108,7 +117,10 @@ const TemplateDetailModal: React.FC<TemplateDetailModalProps> = ({ template, isO
                 <span className="text-sm font-medium text-green-700 dark:text-green-400">Valor sugerido</span>
               </div>
               <p className="text-lg font-bold text-green-800 dark:text-green-300">
-                R$ {template.suggestedPrice.min.toLocaleString()} - R$ {template.suggestedPrice.max.toLocaleString()}
+                {formatCurrency(template.suggestedPrice.min.brl, 'brl')} - {formatCurrency(template.suggestedPrice.max.brl, 'brl')}
+              </p>
+              <p className="text-sm text-green-700 dark:text-green-400">
+                {formatCurrency(template.suggestedPrice.min.usd, 'usd')} - {formatCurrency(template.suggestedPrice.max.usd, 'usd')}
               </p>
             </div>
           </div>

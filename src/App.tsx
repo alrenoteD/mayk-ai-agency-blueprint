@@ -17,6 +17,7 @@ import Anunciar from "./pages/Anunciar";
 import Simuladores from "./pages/Simuladores";
 import Escalar from "./pages/Escalar";
 import Recursos from "./pages/Recursos";
+import Templates from "./pages/Templates";
 import ChatbotWidget from "./components/ChatbotWidget";
 
 // Create a client
@@ -41,6 +42,7 @@ const App: React.FC = () => {
             <Route path="/simuladores" element={<Simuladores />} />
             <Route path="/escalar" element={<Escalar />} />
             <Route path="/recursos" element={<Recursos />} />
+            <Route path="/templates" element={<Templates />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ChatbotWidget />

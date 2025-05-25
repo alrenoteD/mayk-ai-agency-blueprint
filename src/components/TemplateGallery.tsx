@@ -1,10 +1,12 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { automationTemplates, toolsOptions, categoriesOptions, difficultyOptions, purposeOptions, AutomationTemplate } from '@/data/automationTemplates';
+import { automationTemplates, toolsOptions, categoriesOptions, difficultyOptions, purposeOptions } from '@/data/automationTemplates';
+import { AutomationTemplate } from '@/types/automation';
 import { Clock, DollarSign, TrendingUp, Copy, Star, Filter, Eye, Flame, Zap, Info, Download } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";

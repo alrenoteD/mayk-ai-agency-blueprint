@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AutomationTemplate } from '@/data/automationTemplates';
+import { AutomationTemplate } from '@/types/automation';
 import { Copy, Download, Eye, Clock, DollarSign, TrendingUp } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 

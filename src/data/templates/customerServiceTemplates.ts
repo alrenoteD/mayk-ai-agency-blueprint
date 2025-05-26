@@ -10,6 +10,7 @@ export const customerServiceTemplates: AutomationTemplate[] = [
     difficulty: 'Baixa',
     purpose: 'Produtividade',
     creationTime: '4-6 horas',
+    cloneUrl: 'https://templates.deylithdev.com/cs-001',
     monthlyCost: {
       usd: 25,
       brl: 125
@@ -181,6 +182,312 @@ export const customerServiceTemplates: AutomationTemplate[] = [
           },
           {
             "parameters": {
+              "rules": {
+                "values": [
+                  {
+                    "conditions": {
+                      "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 2
+                      },
+                      "conditions": [
+                        {
+                          "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                          "rightValue": "extendedTextMessage",
+                          "operator": {
+                            "type": "string",
+                            "operation": "equals"
+                          }
+                        }
+                      ],
+                      "combinator": "and"
+                    },
+                    "renameOutput": true,
+                    "outputKey": "text"
+                  },
+                  {
+                    "conditions": {
+                      "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 2
+                      },
+                      "conditions": [
+                        {
+                          "id": "02f2832d-9f36-4f95-b8d9-ba95274cd7a7",
+                          "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                          "rightValue": "conversation",
+                          "operator": {
+                            "type": "string",
+                            "operation": "equals",
+                            "name": "filter.operator.equals"
+                          }
+                        }
+                      ],
+                      "combinator": "and"
+                    },
+                    "renameOutput": true,
+                    "outputKey": "text"
+                  },
+                  {
+                    "conditions": {
+                      "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 2
+                      },
+                      "conditions": [
+                        {
+                          "id": "dc6afcfb-8f62-434b-bcf8-e108a033ede0",
+                          "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                          "rightValue": "audioMessage",
+                          "operator": {
+                            "type": "string",
+                            "operation": "equals",
+                            "name": "filter.operator.equals"
+                          }
+                        }
+                      ],
+                      "combinator": "and"
+                    },
+                    "renameOutput": true,
+                    "outputKey": "audio"
+                  },
+                  {
+                    "conditions": {
+                      "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 2
+                      },
+                      "conditions": [
+                        {
+                          "id": "c2db6a87-24e5-4478-8338-52a8c41b0054",
+                          "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                          "rightValue": "imageMessage",
+                          "operator": {
+                            "type": "string",
+                            "operation": "equals",
+                            "name": "filter.operator.equals"
+                          }
+                        }
+                      ],
+                      "combinator": "and"
+                    },
+                    "renameOutput": true,
+                    "outputKey": "imagem"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3.2,
+            "position": [-1160, 20],
+            "id": "83f6e2e1-8ccc-4830-80cf-7f7ef4c496a6",
+            "name": "Switch"
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "8e10a3ed-92d0-4c81-80c8-de328fd844fb",
+                    "name": "mensagem",
+                    "value": "={{ $('Webhook').item.json.body.data.message.conversation }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-940, -40],
+            "id": "cd21059b-7cc0-4005-ba95-02411484758c",
+            "name": "Edit Fields1"
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "1d73651c-afc1-4a39-bbbf-1108449c6c85",
+                    "name": "base64",
+                    "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-940, 120],
+            "id": "f5f42427-322a-49e2-8796-49ed46d4311e",
+            "name": "Edit Fields3"
+          },
+          {
+            "parameters": {
+              "operation": "toBinary",
+              "sourceProperty": "base64",
+              "options": {
+                "fileName": "file.ogg",
+                "mimeType": "application/ogg"
+              }
+            },
+            "type": "n8n-nodes-base.convertToFile",
+            "typeVersion": 1.1,
+            "position": [-720, 120],
+            "id": "aba32805-f25e-4289-bd58-29bdaaefeef8",
+            "name": "Convert to File"
+          },
+          {
+            "parameters": {
+              "resource": "audio",
+              "operation": "transcribe",
+              "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "typeVersion": 1.8,
+            "position": [-500, 120],
+            "id": "143a6020-4e2b-47df-b88e-7d0b2bb1d5a1",
+            "name": "OpenAI",
+            "credentials": {
+              "openAiApi": {
+                "id": "SEU_OPENAI_CREDENTIAL_ID",
+                "name": "OpenAI API Credential"
+              }
+            }
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "8e10a3ed-92d0-4c81-80c8-de328fd844fb",
+                    "name": "mensagem",
+                    "value": "={{ $('Webhook').item.json.body.data.message.conversation }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-940, -160],
+            "id": "e083a102-0d47-4683-95d1-e5a01550591e",
+            "name": "Edit Fields2"
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "80ad7337-7d4e-4e3b-a0c9-483144d90be8",
+                    "name": "mensagem",
+                    "value": "={{ $json.text }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-280, 120],
+            "id": "fb2ffe1c-837e-444f-98e6-2074582329c0",
+            "name": "Edit Fields4"
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "c5b301c9-ce64-4e07-9eb4-43407588f89a",
+                    "name": "base64",
+                    "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-940, 280],
+            "id": "c7278538-f276-445a-9967-9b67111c96f4",
+            "name": "Edit Fields5"
+          },
+          {
+            "parameters": {
+              "operation": "toBinary",
+              "sourceProperty": "base64",
+              "options": {
+                "fileName": "file.png",
+                "mimeType": "image/png"
+              }
+            },
+            "type": "n8n-nodes-base.convertToFile",
+            "typeVersion": 1.1,
+            "position": [-720, 280],
+            "id": "34de42fd-6a70-4c9c-a4a5-2e677432ce00",
+            "name": "Convert to File1"
+          },
+          {
+            "parameters": {
+              "resource": "image",
+              "operation": "analyze",
+              "modelId": {
+                "__rl": true,
+                "value": "gpt-4o-mini",
+                "mode": "list",
+                "cachedResultName": "GPT-4O-MINI"
+              },
+              "text": "Descreva todo o conteudo da imagem. Responda sem acento, sem hifens",
+              "inputType": "base64",
+              "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "typeVersion": 1.8,
+            "position": [-500, 280],
+            "id": "be97dc43-44bb-42b0-b3b1-72f2901a9a94",
+            "name": "OpenAI1",
+            "credentials": {
+              "openAiApi": {
+                "id": "SEU_OPENAI_CREDENTIAL_ID",
+                "name": "OpenAI API Credential"
+              }
+            }
+          },
+          {
+            "parameters": {
+              "assignments": {
+                "assignments": [
+                  {
+                    "id": "d4df0c8a-7940-43d7-a6be-c7f79f0753e8",
+                    "name": "mensagem",
+                    "value": "={{ $json.content }}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [-280, 280],
+            "id": "3ba1ceeb-ce16-4b62-b38c-9b3c5a587856",
+            "name": "Edit Fields6"
+          },
+          {
+            "parameters": {
               "method": "POST",
               "url": "=SUA_URL_WHATSAPP_API",
               "sendHeaders": true,
@@ -260,6 +567,181 @@ export const customerServiceTemplates: AutomationTemplate[] = [
                 }
               ]
             ]
+          },
+          "Webhook": {
+            "main": [
+              [
+                {
+                  "node": "Edit Fields",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields": {
+            "main": [
+              [
+                {
+                  "node": "Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "Responde texto",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Switch": {
+            "main": [
+              [
+                {
+                  "node": "Edit Fields2",
+                  "type": "main",
+                  "index": 0
+                }
+              ],
+              [
+                {
+                  "node": "Edit Fields1",
+                  "type": "main",
+                  "index": 0
+                }
+              ],
+              [
+                {
+                  "node": "Edit Fields3",
+                  "type": "main",
+                  "index": 0
+                }
+              ],
+              [
+                {
+                  "node": "Edit Fields5",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields1": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields3": {
+            "main": [
+              [
+                {
+                  "node": "Convert to File",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Convert to File": {
+            "main": [
+              [
+                {
+                  "node": "OpenAI",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "OpenAI": {
+            "main": [
+              [
+                {
+                  "node": "Edit Fields4",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields2": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields4": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields5": {
+            "main": [
+              [
+                {
+                  "node": "Convert to File1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Convert to File1": {
+            "main": [
+              [
+                {
+                  "node": "OpenAI1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "OpenAI1": {
+            "main": [
+              [
+                {
+                  "node": "Edit Fields6",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Edit Fields6": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
           }
         },
         "active": false,
@@ -277,6 +759,7 @@ export const customerServiceTemplates: AutomationTemplate[] = [
     difficulty: 'Baixa',
     purpose: 'Produtividade',
     creationTime: '2-3 horas',
+    cloneUrl: 'https://templates.deylithdev.com/cs-002',
     monthlyCost: {
       usd: 15,
       brl: 75

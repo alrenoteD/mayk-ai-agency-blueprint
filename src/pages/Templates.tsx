@@ -1,17 +1,25 @@
 
 import React from 'react';
-import PageLayout from '@/components/PageLayout';
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import TemplateGallery from '@/components/TemplateGallery';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Zap, Download, Rocket, Clock } from 'lucide-react';
 
 const Templates: React.FC = () => {
   return (
-    <PageLayout 
-      title="Templates de Automação & Agentes IA" 
-      subtitle="Templates prontos para n8n, Make, Flowise e suas combinações. Transforme ideias em soluções lucrativas em questão de horas."
-    >
+    <div className="min-h-screen">
+      {/* Header with Sidebar Trigger */}
+      <header className="border-b bg-white dark:bg-gray-900 sticky top-0 z-40">
+        <div className="flex items-center gap-4 p-4">
+          <SidebarTrigger />
+          <div>
+            <h1 className="text-2xl font-bold">Gallery - Agentes IA Pré-definidos</h1>
+            <p className="text-muted-foreground">Templates prontos para n8n, Make, Flowise e suas combinações</p>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="section-padding bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
         <div className="container mx-auto">
@@ -114,7 +122,7 @@ const Templates: React.FC = () => {
           </div>
         </div>
       </section>
-    </PageLayout>
+    </div>
   );
 };
 

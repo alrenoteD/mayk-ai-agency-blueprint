@@ -15,6 +15,7 @@ import CriacaoBots from './pages/CriacaoBots';
 import IntegracaoWhatsApp from './pages/IntegracaoWhatsApp';
 import CategoriasAgentes from './pages/CategoriasAgentes';
 import PrimeirosClientes from './pages/PrimeirosClientes';
+import GeracaoLeads from './pages/GeracaoLeads';
 import Anunciar from './pages/Anunciar';
 import Simuladores from './pages/Simuladores';
 import Escalar from './pages/Escalar';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/integracao-whatsapp" element={<IntegracaoWhatsApp />} />
               <Route path="/categorias-agentes" element={<CategoriasAgentes />} />
               <Route path="/primeiros-clientes" element={<PrimeirosClientes />} />
+              <Route path="/geracao-leads" element={<GeracaoLeads />} />
               <Route path="/anunciar" element={<Anunciar />} />
               <Route path="/simuladores" element={<Simuladores />} />
               <Route path="/escalar" element={<Escalar />} />
